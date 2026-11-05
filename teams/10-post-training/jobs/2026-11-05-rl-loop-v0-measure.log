@@ -1,0 +1,11 @@
+# Test log for teams/10-post-training/jobs/2026-11-05-rl-loop-v0-measure.md
+# 2026-11-05 19:22 IST, Apple M1 Pro, CPU, inside Docker with --network=none (python:3.12-slim, torch 2.9.1+cpu, transformers 5.22.1)
+# Model: a shrunk random OLMoE with OLMoE-1B-7B-0125-Instruct's vocabulary (50304) and router layout (mlp.gate), hidden 64, 2 layers, 8 experts top-2
+# Command: python teams/10-post-training/rl-loop/train.py --config teams/10-post-training/rl-loop/config/olmoe_1b7b_measure.yaml --model-path /inputs/shrunk-olmoe --device cpu --steps 6 --out-dir /out
+{"step": 1, "train_reward": 0.515625, "groups_used": 8, "groups_dropped": 0, "loss": 0.0, "clip_frac": 0.0, "ratio_mean": 1.0, "kl": 0.0, "seconds": 33.3}
+{"step": 2, "train_reward": 0.515625, "groups_used": 8, "groups_dropped": 0, "loss": 0.0, "clip_frac": 0.0, "ratio_mean": 1.0, "kl": 0.0, "seconds": 50.2}
+{"step": 3, "train_reward": 0.484375, "groups_used": 8, "groups_dropped": 0, "loss": 0.0, "clip_frac": 0.0, "ratio_mean": 1.0, "kl": 0.0, "seconds": 67.3}
+{"step": 4, "train_reward": 0.375, "groups_used": 8, "groups_dropped": 0, "loss": -5.587935447692871e-09, "clip_frac": 0.0, "ratio_mean": 1.0, "kl": 0.0, "seconds": 84.1}
+{"step": 5, "train_reward": 0.53125, "groups_used": 8, "groups_dropped": 0, "loss": 0.0, "clip_frac": 0.0, "ratio_mean": 1.0, "kl": 0.0, "seconds": 100.6}
+{"step": 6, "train_reward": 0.59375, "groups_used": 8, "groups_dropped": 0, "loss": 1.862645149230957e-09, "clip_frac": 0.0, "ratio_mean": 1.0, "kl": 0.0, "seconds": 117.0, "heldout_reward": 0.453125}
+{"algo": "grpo", "steps": 6, "k": 8, "trainable_params": 33024, "router_params_frozen": ["model.layers.0.mlp.gate.weight", "model.layers.1.mlp.gate.weight"], "router_checksum_before": "feaad5778f42bb88d9f3c7516e8cff05ae26a3d0b069bd34b8524795e4a81f87", "router_checksum_after": "feaad5778f42bb88d9f3c7516e8cff05ae26a3d0b069bd34b8524795e4a81f87", "router_unchanged": true, "heldout_reward_start": 0.453125, "heldout_reward_end": 0.453125, "seconds": 132.6, "seconds_per_step": 22.1, "peak_gpu_memory_gb": null}
