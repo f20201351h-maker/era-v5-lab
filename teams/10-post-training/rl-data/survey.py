@@ -47,13 +47,16 @@ def render(task: dict, instructions: dict[str, str | None]) -> str:
     return tmpl.replace("{problem}", body)
 
 
-def score_one(job: tuple[str, dict, str]) -> int:
+def score_one(job: tuple[str, dict, str]) -> tuple[int, str, bool]:
+    """(reward, the checker's reason, whether the completion contains a \\boxed answer)."""
     kind, task, completion = job
+    boxed = "\\boxed" in completion
     try:
         fn = math_check.score if kind == "math" else stdio_check.score
-        return int(fn(task, completion)["reward"])
+        r = fn(task, completion)
+        return int(r["reward"]), str(r.get("reason", "")), boxed
     except Exception:  # noqa: BLE001  (a checker crash counts as unsolved; rare)
-        return 0
+        return 0, "checker error", boxed
 
 
 def run_survey(tasks: list[dict], texts: list[str], generate: Callable, k: int, workers: int = 8,
@@ -66,11 +69,16 @@ def run_survey(tasks: list[dict], texts: list[str], generate: Callable, k: int, 
     t0 = time.time()
     ex_cls = cf.ProcessPoolExecutor if pool == "process" else cf.ThreadPoolExecutor
     with ex_cls(workers) as ex:
-        rewards = list(ex.map(score_one, jobs, chunksize=16))
+        scored = list(ex.map(score_one, jobs, chunksize=16))
+    rewards = [x[0] for x in scored]
     score_s = time.time() - t0
     rows, i = [], 0
     for t, cs in zip(tasks, samples):
         rs = rewards[i:i + len(cs)]
+        reasons: dict[str, int] = {}
+        for x in scored[i:i + len(cs)]:
+            reasons[x[1]] = reasons.get(x[1], 0) + 1
+        boxed = sum(int(x[2]) for x in scored[i:i + len(cs)])
         i += len(cs)
         lens = [c[1] for c in cs]
         good = [c[1] for c, r in zip(cs, rs) if r]
@@ -79,7 +87,8 @@ def run_survey(tasks: list[dict], texts: list[str], generate: Callable, k: int, 
                      "pass_rate": round(sum(rs) / len(cs), 3), "decision": decide(rs),
                      "mean_tokens": round(sum(lens) / len(lens), 1),
                      "mean_tokens_correct": round(sum(good) / len(good), 1) if good else None,
-                     "truncated": round(sum(bool(c[2]) for c in cs) / len(cs), 3)})
+                     "truncated": round(sum(bool(c[2]) for c in cs) / len(cs), 3),
+                     "reasons": reasons, "boxed": boxed})
     tokens = sum(c[1] for cs in samples for c in cs)
     return rows, {"generate_s": round(gen_s, 1), "score_s": round(score_s, 1), "sampled_tokens": tokens,
                   "tokens_per_s": round(tokens / max(gen_s, 1e-9), 1)}

@@ -74,9 +74,50 @@ Completions got about 20% shorter during training (grpo 527 → 436 tokens, gspo
 - Not ruled out: part of the gain may be the model stating its final answer in a form the checker accepts (format) rather than solving more problems. The completions were not kept. The trained attention weights from C4 are saved on the Modal Volume (`/vol/ckpt/c4_grpo_attention_bf16.pt`, 537 MB, sha256 `102b417c…`), so this can be checked without retraining.
 - C4 also repeats C1 under GPU non-determinism: +16.8 vs +15.0 at 1,024 tokens, with the same seed. This is not an independent seed.
 
+## Does it transfer to a standard benchmark, and is it format? (E1, pre-registered)
+
+The C4 end model (base + saved attention weights) and the start model were scored on **MATH-500** and on our held-out set. Settings: 4 samples, temperature 1.0, up to 2,048 tokens, raw problem.
+- MATH-500 is the 500-problem MATH test subset from OpenAI's PRM800K. It covers all levels, is not filtered by pass rate, and has 0 exact text overlap with our training pool.
+- For every sample we recorded why it failed and whether it boxed an answer. Manifests (ids and numbers): `e1_eval/`.
+
+| Set | Start | End | Change (95% CI) |
+|---|---|---|---|
+| MATH-500 | 19.0% | 23.1% | **+4.1** (+1.9 to +6.4) |
+| Held-out (199, "sometimes solved") | 36.8% | 51.8% | +15.0 (+10.7 to +19.2) |
+
+MATH-500 by level:
+
+| Level | Problems | Start | End |
+|---|---|---|---|
+| 1 | 43 | 48.3% | 58.7% |
+| 2 | 90 | 31.9% | 42.5% |
+| 3 | 105 | 21.2% | 25.7% |
+| 4 | 128 | 12.1% | 12.5% |
+| 5 | 134 | 5.6% | 6.5% |
+
+- **Transfer: real, but below the pre-registered +5 bar.** The CI excludes 0, but +4.1 < +5.
+  - The start score (19.0%) matches the model card's MATH figure for this checkpoint (20.36).
+  - The gain sits in levels 1 to 3. Levels 4 and 5 did not move.
+  - The held-out set was selected for "sometimes solved", the band where RL helps most, so it overstates what a full benchmark shows. About +4 points (+22% relative) is the honest benchmark number.
+- **Format: ruled out.** Before and after, 97 to 99.6% of answers contain `\boxed{}`, and no failure is "no answer found". All failures are wrong answers, so every gained point is a wrong answer turned right.
+- The start model's held-out score here (36.8%) agrees with the loop's own 2,048-token eval (37.9%), so the two evaluation paths are consistent.
+
+## Independent second seed (E2, pre-registered)
+
+Same as C1 but seed 4242 (different data order, sampling and probe) and 100 steps.
+
+| Step | 0 | 25 | 50 | 75 | 100 |
+|---|---|---|---|---|---|
+| seed 1234 (C1), held-out | .372 | .494 | .477 | .515 | .500 |
+| seed 4242 (E2), held-out | .379 | .469 | .495 | .508 | .504 |
+
+- E2 at step 100: **+12.4 points** (CI +8.0 to +16.8). C1 at the same step: +12.8. The bar (at least +5, CI above 0) is met.
+- Router checksum unchanged. KL to start 0.039. Worst load-ratio rise +8.0%.
+- Two seeds agree closely. That is still only two values, so nothing is claimed about the spread.
+
 ## Caveats
-- **The held-out problems come from the same distribution** (MATH train, pre-selected as "sometimes solved" by the start model). This is not a benchmark score; MATH-500 and other G9 benchmarks were not run.
-- One seed per run. Attention-only training. OLMoE, not Team 5's model (which arrives 18 Nov).
+- **The held-out problems come from the same distribution** (MATH train, pre-selected as "sometimes solved" by the start model), which favours RL. On the standard MATH-500 benchmark the gain is +4.1 points (see E1). Other G9 benchmarks were not run.
+- Seeds: two for grpo (1234 for 200 steps, 4242 for 100 steps); one each for gspo and the router-trainable control. Attention-only training. OLMoE, not Team 5's model (which arrives 18 Nov).
 - KL to start was close to the limit at step 200 for grpo and gspo (0.082, 0.093). Longer runs would need a KL penalty or a lower learning rate.
 
-**Cost:** pilots $1.47, the two crashed first attempts $3.40, C1 $3.66, C2 $3.95, C3 $4.07, C4 $4.28 (Modal list rates, from our run ledger). All phases together: $24.19.
+**Cost:** pilots $1.47, the two crashed first attempts $3.40, C1 $3.66, C2 $3.95, C3 $4.07, C4 $4.28, E1 $0.70 (incl. a failed first try) plus a $0.01 merge, E2 $2.00 (Modal list rates, from our run ledger). All phases together: $26.89.

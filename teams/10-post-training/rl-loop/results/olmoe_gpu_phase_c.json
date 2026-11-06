@@ -650,6 +650,79 @@
     "sha256": "102b417ca74bd32feb5cd3243247c6a77b09caa7ba53dc094131912b31bc7708"
    },
    "mean_step_s_after_step1": 13.12
+  },
+  "e2_grpo_seed4242": {
+   "what": "independent second seed (4242), grpo, 100 steps, otherwise C1",
+   "heldout_change": {
+    "problems": 199,
+    "start": 0.3794,
+    "end": 0.5038,
+    "diff": 0.1244,
+    "ci_low": 0.0804,
+    "ci_high": 0.1683,
+    "ci_excludes_zero": true,
+    "resamples": 10000
+   },
+   "heldout_curve": [
+    [
+     0,
+     0.3793969849246231
+    ],
+    [
+     25,
+     0.4685929648241206
+    ],
+    [
+     50,
+     0.4949748743718593
+    ],
+    [
+     75,
+     0.507537688442211
+    ],
+    [
+     100,
+     0.5037688442211056
+    ]
+   ],
+   "router_unchanged": true,
+   "kl_to_start_end": 0.03904,
+   "load_ratio_max_rel_rise": 0.0798,
+   "routing_end": {
+    "step": 100,
+    "truncated": 0.0691,
+    "mean_tokens": 471.7,
+    "kl_to_start": 0.03904,
+    "load_ratio_max": 7.5353,
+    "flip_vs_step0": 0.9781,
+    "top1_flip_vs_step0": 0.0629,
+    "mass_shift_vs_step0": 0.03298
+   },
+   "mean_step_s_after_step1": 12.458
   }
+ },
+ "e1_benchmark": {
+  "math500": {
+   "start": 0.1895,
+   "end": 0.2305,
+   "diff": 0.041,
+   "ci": [
+    0.0185,
+    0.0635
+   ],
+   "n": 500
+  },
+  "heldout": {
+   "start": 0.3681,
+   "end": 0.5176,
+   "diff": 0.1495,
+   "ci": [
+    0.1068,
+    0.1922
+   ],
+   "n": 199
+  },
+  "format": "no 'no answer found' failures before or after; 97-99.6% of answers boxed",
+  "manifests": "e1_eval/"
  }
 }

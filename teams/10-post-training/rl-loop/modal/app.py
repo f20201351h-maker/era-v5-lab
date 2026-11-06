@@ -126,6 +126,37 @@ def build_code_contests(judges: str = "aizu,atcoder,codechef,hackerearth") -> di
             **_record(Path("/vol/runs/code_contests"), None, started, {"cpu": 4})}
 
 
+@function(volumes={"/vol": VOL}, timeout=1800, cpu=4.0, memory=40960)
+def merge_weights(base: str, weights: str, out: str) -> dict:
+    """Base checkpoint + saved trainable weights (train.py `save_trainable`) -> a full HF checkpoint for evaluation."""
+    import hashlib  # noqa: PLC0415
+    import shutil  # noqa: PLC0415
+
+    import torch  # noqa: PLC0415
+    from transformers import AutoModelForCausalLM  # noqa: PLC0415
+    started = time.time()
+    model = AutoModelForCausalLM.from_pretrained(base, dtype=torch.bfloat16, local_files_only=True)
+    state = torch.load(weights, map_location="cpu")
+    params = dict(model.named_parameters())
+    missing = [n for n in state if n not in params]
+    if missing:
+        raise ValueError(f"{len(missing)} saved tensors have no matching parameter, e.g. {missing[:3]}")
+    with torch.no_grad():
+        for n, t in state.items():
+            if params[n].shape != t.shape:
+                raise ValueError(f"shape mismatch for {n}: {tuple(params[n].shape)} vs {tuple(t.shape)}")
+            params[n].copy_(t.to(params[n].dtype))
+    model.save_pretrained(out, safe_serialization=True)
+    for f in Path(base).iterdir():  # tokenizer and generation files only, unchanged
+        # never copy the base's weight index files: they point at the base's shard files, not ours (E1, 6 Nov)
+        if f.suffix in (".json", ".txt", ".model") and not f.name.endswith(".index.json") \
+                and not (Path(out) / f.name).exists():
+            shutil.copy(f, Path(out) / f.name)
+    rec = {"base": base, "weights": weights, "out": out, "tensors_replaced": len(state),
+           "weights_sha256": hashlib.sha256(Path(weights).read_bytes()).hexdigest()}
+    return {**rec, **_record(Path("/vol/runs/merge"), None, started, {"cpu": 4})}
+
+
 # --- GPU functions (one per GPU type: the GPU is fixed when a function is declared) -------------
 
 def _train_body(gpu: str, configs: dict[str, str], run_id: str, max_seconds: float) -> dict:
@@ -282,4 +313,13 @@ def survey(jobs: str, run_id: str, max_minutes: float = 60.0, budget: float = 27
     guard("L40S", int(cap + 600), budget, ledger)
     r = survey_l40s.remote(json.loads(Path(jobs).read_text()), run_id, cap)
     log_spend(ledger, "survey", run_id, r)
+    print(json.dumps(r, indent=1))
+
+
+@local_entrypoint()
+def merge(base: str, weights: str, out: str, budget: float = 27.0):
+    ledger = _ledger_path()
+    guard(None, 1800, budget, ledger)
+    r = merge_weights.remote(base, weights, out)
+    log_spend(ledger, "merge", "merge", r)
     print(json.dumps(r, indent=1))

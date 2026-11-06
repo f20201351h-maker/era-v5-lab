@@ -1,0 +1,3838 @@
+{
+"model": "/vol/hf/allenai/OLMoE-1B-7B-0125-DPO",
+"model_revision": "0f2e2e1bd78f146685c346ac0f797ae146ffa8f9",
+"k": 4,
+"temperature": 1.0,
+"top_p": 1.0,
+"max_tokens": 2048,
+"seed": 1234,
+"instruction_sha256": {
+"math": null
+},
+"tasks": 199,
+"keep": 125,
+"too_hard": 58,
+"too_easy": 16,
+"generate_s": 92.1,
+"score_s": 1.6,
+"sampled_tokens": 453463,
+"tokens_per_s": 4924.6,
+"by_group": {
+"math/algebra/Level 1": {
+"tasks": 10,
+"keep": 6,
+"too_hard": 1,
+"too_easy": 3,
+"solved": 23,
+"samples": 40,
+"pass_rate": 0.575
+},
+"math/algebra/Level 2": {
+"tasks": 7,
+"keep": 6,
+"too_hard": 0,
+"too_easy": 1,
+"solved": 15,
+"samples": 28,
+"pass_rate": 0.5357
+},
+"math/algebra/Level 3": {
+"tasks": 8,
+"keep": 6,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 10,
+"samples": 32,
+"pass_rate": 0.3125
+},
+"math/algebra/Level 4": {
+"tasks": 7,
+"keep": 4,
+"too_hard": 2,
+"too_easy": 1,
+"solved": 11,
+"samples": 28,
+"pass_rate": 0.3929
+},
+"math/algebra/Level 5": {
+"tasks": 3,
+"keep": 0,
+"too_hard": 3,
+"too_easy": 0,
+"solved": 0,
+"samples": 12,
+"pass_rate": 0.0
+},
+"math/counting_and_probability/Level 1": {
+"tasks": 11,
+"keep": 8,
+"too_hard": 1,
+"too_easy": 2,
+"solved": 23,
+"samples": 44,
+"pass_rate": 0.5227
+},
+"math/counting_and_probability/Level 2": {
+"tasks": 7,
+"keep": 6,
+"too_hard": 0,
+"too_easy": 1,
+"solved": 15,
+"samples": 28,
+"pass_rate": 0.5357
+},
+"math/counting_and_probability/Level 3": {
+"tasks": 2,
+"keep": 0,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 0,
+"samples": 8,
+"pass_rate": 0.0
+},
+"math/counting_and_probability/Level 4": {
+"tasks": 8,
+"keep": 6,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 10,
+"samples": 32,
+"pass_rate": 0.3125
+},
+"math/counting_and_probability/Level 5": {
+"tasks": 1,
+"keep": 0,
+"too_hard": 1,
+"too_easy": 0,
+"solved": 0,
+"samples": 4,
+"pass_rate": 0.0
+},
+"math/geometry/Level 1": {
+"tasks": 6,
+"keep": 5,
+"too_hard": 1,
+"too_easy": 0,
+"solved": 9,
+"samples": 24,
+"pass_rate": 0.375
+},
+"math/geometry/Level 2": {
+"tasks": 7,
+"keep": 5,
+"too_hard": 1,
+"too_easy": 1,
+"solved": 16,
+"samples": 28,
+"pass_rate": 0.5714
+},
+"math/geometry/Level 3": {
+"tasks": 5,
+"keep": 3,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 6,
+"samples": 20,
+"pass_rate": 0.3
+},
+"math/geometry/Level 4": {
+"tasks": 5,
+"keep": 3,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 3,
+"samples": 20,
+"pass_rate": 0.15
+},
+"math/geometry/Level 5": {
+"tasks": 1,
+"keep": 0,
+"too_hard": 1,
+"too_easy": 0,
+"solved": 0,
+"samples": 4,
+"pass_rate": 0.0
+},
+"math/intermediate_algebra/Level 1": {
+"tasks": 3,
+"keep": 2,
+"too_hard": 1,
+"too_easy": 0,
+"solved": 3,
+"samples": 12,
+"pass_rate": 0.25
+},
+"math/intermediate_algebra/Level 2": {
+"tasks": 7,
+"keep": 3,
+"too_hard": 4,
+"too_easy": 0,
+"solved": 3,
+"samples": 28,
+"pass_rate": 0.1071
+},
+"math/intermediate_algebra/Level 3": {
+"tasks": 7,
+"keep": 0,
+"too_hard": 7,
+"too_easy": 0,
+"solved": 0,
+"samples": 28,
+"pass_rate": 0.0
+},
+"math/intermediate_algebra/Level 4": {
+"tasks": 1,
+"keep": 1,
+"too_hard": 0,
+"too_easy": 0,
+"solved": 1,
+"samples": 4,
+"pass_rate": 0.25
+},
+"math/intermediate_algebra/Level 5": {
+"tasks": 1,
+"keep": 1,
+"too_hard": 0,
+"too_easy": 0,
+"solved": 2,
+"samples": 4,
+"pass_rate": 0.5
+},
+"math/number_theory/Level 1": {
+"tasks": 8,
+"keep": 6,
+"too_hard": 1,
+"too_easy": 1,
+"solved": 15,
+"samples": 32,
+"pass_rate": 0.4688
+},
+"math/number_theory/Level 2": {
+"tasks": 8,
+"keep": 4,
+"too_hard": 3,
+"too_easy": 1,
+"solved": 12,
+"samples": 32,
+"pass_rate": 0.375
+},
+"math/number_theory/Level 3": {
+"tasks": 6,
+"keep": 2,
+"too_hard": 4,
+"too_easy": 0,
+"solved": 2,
+"samples": 24,
+"pass_rate": 0.0833
+},
+"math/number_theory/Level 4": {
+"tasks": 4,
+"keep": 3,
+"too_hard": 1,
+"too_easy": 0,
+"solved": 6,
+"samples": 16,
+"pass_rate": 0.375
+},
+"math/number_theory/Level 5": {
+"tasks": 3,
+"keep": 1,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 2,
+"samples": 12,
+"pass_rate": 0.1667
+},
+"math/prealgebra/Level 1": {
+"tasks": 12,
+"keep": 9,
+"too_hard": 2,
+"too_easy": 1,
+"solved": 24,
+"samples": 48,
+"pass_rate": 0.5
+},
+"math/prealgebra/Level 2": {
+"tasks": 9,
+"keep": 6,
+"too_hard": 1,
+"too_easy": 2,
+"solved": 21,
+"samples": 36,
+"pass_rate": 0.5833
+},
+"math/prealgebra/Level 3": {
+"tasks": 9,
+"keep": 5,
+"too_hard": 4,
+"too_easy": 0,
+"solved": 11,
+"samples": 36,
+"pass_rate": 0.3056
+},
+"math/prealgebra/Level 4": {
+"tasks": 5,
+"keep": 3,
+"too_hard": 0,
+"too_easy": 2,
+"solved": 15,
+"samples": 20,
+"pass_rate": 0.75
+},
+"math/prealgebra/Level 5": {
+"tasks": 7,
+"keep": 3,
+"too_hard": 4,
+"too_easy": 0,
+"solved": 4,
+"samples": 28,
+"pass_rate": 0.1429
+},
+"math/precalculus/Level 1": {
+"tasks": 10,
+"keep": 10,
+"too_hard": 0,
+"too_easy": 0,
+"solved": 19,
+"samples": 40,
+"pass_rate": 0.475
+},
+"math/precalculus/Level 2": {
+"tasks": 6,
+"keep": 5,
+"too_hard": 1,
+"too_easy": 0,
+"solved": 7,
+"samples": 24,
+"pass_rate": 0.2917
+},
+"math/precalculus/Level 3": {
+"tasks": 1,
+"keep": 1,
+"too_hard": 0,
+"too_easy": 0,
+"solved": 3,
+"samples": 4,
+"pass_rate": 0.75
+},
+"math/precalculus/Level 4": {
+"tasks": 4,
+"keep": 2,
+"too_hard": 2,
+"too_easy": 0,
+"solved": 2,
+"samples": 16,
+"pass_rate": 0.125
+}
+},
+"rows": [
+{
+"id": "math-algebra-14",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 364.2,
+"mean_tokens_correct": 377.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-92",
+"kind": "math",
+"group": "algebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 971.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-98",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 375.8,
+"mean_tokens_correct": 376.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-180",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 547.2,
+"mean_tokens_correct": 521.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-210",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 750.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-214",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 228.2,
+"mean_tokens_correct": 226.3,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-297",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 396.8,
+"mean_tokens_correct": 445.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-448",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 290.2,
+"mean_tokens_correct": 298.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-511",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 851.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-561",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 384.5,
+"mean_tokens_correct": 388.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-583",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 502.5,
+"mean_tokens_correct": 502.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-626",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 560.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-656",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 486.5,
+"mean_tokens_correct": 468.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-708",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 836.5,
+"mean_tokens_correct": 671.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-770",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 294.5,
+"mean_tokens_correct": 321.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-860",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 491.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-867",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 408.0,
+"mean_tokens_correct": 659.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-877",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 606.8,
+"mean_tokens_correct": 667.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-924",
+"kind": "math",
+"group": "algebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1169.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-982",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 445.8,
+"mean_tokens_correct": 436.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1000",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 324.2,
+"mean_tokens_correct": 268.7,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1148",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 357.0,
+"mean_tokens_correct": 510.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1169",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 606.2,
+"mean_tokens_correct": 585.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1212",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 676.0,
+"mean_tokens_correct": 703.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1239",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 519.0,
+"mean_tokens_correct": 565.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1294",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 596.0,
+"mean_tokens_correct": 596.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1315",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 747.2,
+"mean_tokens_correct": 764.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1329",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 427.2,
+"mean_tokens_correct": 427.2,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1365",
+"kind": "math",
+"group": "algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 375.8,
+"mean_tokens_correct": 375.8,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1373",
+"kind": "math",
+"group": "algebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 389.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1384",
+"kind": "math",
+"group": "algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 538.0,
+"mean_tokens_correct": 538.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1396",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 583.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1505",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 1248.8,
+"mean_tokens_correct": 979.0,
+"truncated": 0.25,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 3
+},
+{
+"id": "math-algebra-1636",
+"kind": "math",
+"group": "algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 498.5,
+"mean_tokens_correct": 143.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-algebra-1714",
+"kind": "math",
+"group": "algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 882.0,
+"mean_tokens_correct": 961.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-0",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 250.8,
+"mean_tokens_correct": 351.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-40",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 507.2,
+"mean_tokens_correct": 556.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-41",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 555.0,
+"mean_tokens_correct": 545.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-53",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 387.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-68",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 461.0,
+"mean_tokens_correct": 819.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-104",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 508.0,
+"mean_tokens_correct": 494.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-111",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 282.5,
+"mean_tokens_correct": 270.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-114",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 340.0,
+"mean_tokens_correct": 343.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-146",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1162.2,
+"mean_tokens_correct": null,
+"truncated": 0.25,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-152",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 290.8,
+"mean_tokens_correct": 264.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-156",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 695.0,
+"mean_tokens_correct": 585.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-206",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 244.5,
+"mean_tokens_correct": 244.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-242",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 456.2,
+"mean_tokens_correct": 475.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-286",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 499.0,
+"mean_tokens_correct": 551.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-465",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 420.8,
+"mean_tokens_correct": 444.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-467",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 526.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-488",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 434.0,
+"mean_tokens_correct": 332.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-533",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 576.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-534",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 329.5,
+"mean_tokens_correct": 337.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-539",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 668.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-568",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 290.5,
+"mean_tokens_correct": 290.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-614",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 306.0,
+"mean_tokens_correct": 299.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-618",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 563.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-621",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 468.2,
+"mean_tokens_correct": 404.7,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-642",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 564.5,
+"mean_tokens_correct": 460.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-653",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 324.5,
+"mean_tokens_correct": 324.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-683",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 652.2,
+"mean_tokens_correct": 699.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-736",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 500.0,
+"mean_tokens_correct": 455.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-counting_and_probability-741",
+"kind": "math",
+"group": "counting_and_probability",
+"level": "Level 4",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 584.5,
+"mean_tokens_correct": 587.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-1",
+"kind": "math",
+"group": "geometry",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 792.8,
+"mean_tokens_correct": 505.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-7",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 442.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-55",
+"kind": "math",
+"group": "geometry",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 423.0,
+"mean_tokens_correct": 451.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-68",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 578.2,
+"mean_tokens_correct": 639.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-85",
+"kind": "math",
+"group": "geometry",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 865.5,
+"mean_tokens_correct": 600.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-123",
+"kind": "math",
+"group": "geometry",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 785.0,
+"mean_tokens_correct": 598.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-186",
+"kind": "math",
+"group": "geometry",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 662.8,
+"mean_tokens_correct": 620.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-207",
+"kind": "math",
+"group": "geometry",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 702.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-214",
+"kind": "math",
+"group": "geometry",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 536.5,
+"mean_tokens_correct": 428.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-251",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 322.5,
+"mean_tokens_correct": 322.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-305",
+"kind": "math",
+"group": "geometry",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 423.8,
+"mean_tokens_correct": 467.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-307",
+"kind": "math",
+"group": "geometry",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 868.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-351",
+"kind": "math",
+"group": "geometry",
+"level": "Level 3",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 639.8,
+"mean_tokens_correct": 662.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-367",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 986.2,
+"mean_tokens_correct": 657.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-379",
+"kind": "math",
+"group": "geometry",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 696.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-380",
+"kind": "math",
+"group": "geometry",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 560.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-385",
+"kind": "math",
+"group": "geometry",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 622.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-499",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 502.5,
+"mean_tokens_correct": 535.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-621",
+"kind": "math",
+"group": "geometry",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 785.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-683",
+"kind": "math",
+"group": "geometry",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 489.5,
+"mean_tokens_correct": 610.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-692",
+"kind": "math",
+"group": "geometry",
+"level": "Level 3",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 574.8,
+"mean_tokens_correct": 590.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-699",
+"kind": "math",
+"group": "geometry",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 530.2,
+"mean_tokens_correct": 494.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-763",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 547.0,
+"mean_tokens_correct": 600.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-geometry-777",
+"kind": "math",
+"group": "geometry",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 504.5,
+"mean_tokens_correct": 554.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-53",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 986.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-102",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 704.0,
+"mean_tokens_correct": 954.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-247",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1204.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-284",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 1132.8,
+"mean_tokens_correct": 1163.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-304",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1190.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-345",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 628.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-376",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 751.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-628",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 871.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-696",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 629.5,
+"mean_tokens_correct": 724.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 3
+},
+{
+"id": "math-intermediate_algebra-721",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1029.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-860",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 821.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-889",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 572.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-922",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 1159.0,
+"mean_tokens_correct": 957.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-933",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1039.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-995",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 5",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 1273.8,
+"mean_tokens_correct": 1377.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-1106",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 874.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-1238",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 300.0,
+"mean_tokens_correct": 288.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-1257",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 457.8,
+"mean_tokens_correct": 538.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-intermediate_algebra-1291",
+"kind": "math",
+"group": "intermediate_algebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 584.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-23",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 541.8,
+"mean_tokens_correct": 617.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-45",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 431.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-88",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 653.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-101",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 505.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-104",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 388.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-171",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1410.8,
+"mean_tokens_correct": null,
+"truncated": 0.25,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 3
+},
+{
+"id": "math-number_theory-213",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 346.8,
+"mean_tokens_correct": 346.8,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-216",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 495.5,
+"mean_tokens_correct": 649.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-232",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 512.2,
+"mean_tokens_correct": 636.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-246",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 501.2,
+"mean_tokens_correct": 654.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-247",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 257.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-290",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 239.0,
+"mean_tokens_correct": 195.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-318",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 352.8,
+"mean_tokens_correct": 425.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-326",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 456.8,
+"mean_tokens_correct": 456.8,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-352",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 461.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-403",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 4",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 857.2,
+"mean_tokens_correct": 734.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-415",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 1055.2,
+"mean_tokens_correct": 952.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-467",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 584.0,
+"mean_tokens_correct": 489.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-469",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 423.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-505",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 926.5,
+"mean_tokens_correct": 552.7,
+"truncated": 0.25,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 3
+},
+{
+"id": "math-number_theory-508",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 510.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-658",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 5",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 1020.0,
+"mean_tokens_correct": 710.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-681",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 424.2,
+"mean_tokens_correct": 433.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-729",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 308.2,
+"mean_tokens_correct": 325.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-730",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 4",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 424.0,
+"mean_tokens_correct": 436.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-761",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 615.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-799",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 464.8,
+"mean_tokens_correct": 513.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-809",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 513.2,
+"mean_tokens_correct": 474.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-number_theory-862",
+"kind": "math",
+"group": "number_theory",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 472.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-8",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 4",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 558.2,
+"mean_tokens_correct": 558.2,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-48",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 419.2,
+"mean_tokens_correct": 350.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-59",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 386.0,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-90",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 279.8,
+"mean_tokens_correct": 321.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-105",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 418.5,
+"mean_tokens_correct": 440.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-108",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 481.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-141",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 386.0,
+"mean_tokens_correct": 455.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-144",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 322.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-176",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 428.0,
+"mean_tokens_correct": 351.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-187",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 325.8,
+"mean_tokens_correct": 347.3,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-226",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 646.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-230",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 558.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-301",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 214.5,
+"mean_tokens_correct": 230.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-490",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 445.5,
+"mean_tokens_correct": 451.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-498",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 481.5,
+"mean_tokens_correct": 456.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-548",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 4",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 597.8,
+"mean_tokens_correct": 701.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-553",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 281.0,
+"mean_tokens_correct": 302.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-562",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 4",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 443.2,
+"mean_tokens_correct": 443.2,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-565",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 677.2,
+"mean_tokens_correct": 534.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-592",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 4",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 672.8,
+"mean_tokens_correct": 668.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-600",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 402.0,
+"mean_tokens_correct": 397.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-603",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 475.2,
+"mean_tokens_correct": 454.5,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-627",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 527.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-676",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 425.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-747",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 200.5,
+"mean_tokens_correct": 193.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-753",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 601.5,
+"mean_tokens_correct": 470.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-818",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 337.0,
+"mean_tokens_correct": 341.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-835",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 425.0,
+"mean_tokens_correct": 389.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-865",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 318.5,
+"mean_tokens_correct": 318.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-869",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 319.8,
+"mean_tokens_correct": 338.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-902",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 547.2,
+"mean_tokens_correct": 423.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-914",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 230.2,
+"mean_tokens_correct": 219.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-961",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 340.2,
+"mean_tokens_correct": 340.2,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-990",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 628.2,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1019",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 395.8,
+"mean_tokens_correct": 547.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1033",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 378.8,
+"mean_tokens_correct": 367.7,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1093",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 614.8,
+"mean_tokens_correct": 452.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1110",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 459.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1164",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 2",
+"k": 4,
+"solved": 4,
+"pass_rate": 1.0,
+"decision": "too_easy",
+"mean_tokens": 118.8,
+"mean_tokens_correct": 118.8,
+"truncated": 0.0,
+"reasons": {
+"correct": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1177",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 3",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 368.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1198",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 392.8,
+"mean_tokens_correct": 347.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-prealgebra-1202",
+"kind": "math",
+"group": "prealgebra",
+"level": "Level 5",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 580.8,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-91",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 3",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 389.2,
+"mean_tokens_correct": 410.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-121",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 348.8,
+"mean_tokens_correct": 377.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-153",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 833.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-199",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 574.0,
+"mean_tokens_correct": 489.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-212",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 628.2,
+"mean_tokens_correct": 526.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-249",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 479.8,
+"mean_tokens_correct": 587.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 2,
+"correct": 2
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-254",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 544.2,
+"mean_tokens_correct": 565.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-294",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 367.8,
+"mean_tokens_correct": 483.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-299",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 4",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 1131.2,
+"mean_tokens_correct": null,
+"truncated": 0.25,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 3
+},
+{
+"id": "math-precalculus-324",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 998.5,
+"mean_tokens_correct": 1086.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-331",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 919.5,
+"mean_tokens_correct": 924.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 3
+},
+{
+"id": "math-precalculus-363",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 519.5,
+"mean_tokens_correct": 626.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-376",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 385.2,
+"mean_tokens_correct": 384.3,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-397",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 2",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 1149.8,
+"mean_tokens_correct": 1296.5,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-404",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 276.5,
+"mean_tokens_correct": 295.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 3,
+"wrong answer": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-427",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 795.2,
+"mean_tokens_correct": 753.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 1,
+"wrong answer": 3
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-443",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 4",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 1819.0,
+"mean_tokens_correct": 1587.0,
+"truncated": 0.25,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 3
+},
+{
+"id": "math-precalculus-527",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 3,
+"pass_rate": 0.75,
+"decision": "keep",
+"mean_tokens": 446.5,
+"mean_tokens_correct": 462.7,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 1,
+"correct": 3
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-578",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 2",
+"k": 4,
+"solved": 0,
+"pass_rate": 0.0,
+"decision": "too_hard",
+"mean_tokens": 564.5,
+"mean_tokens_correct": null,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 4
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-608",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 2",
+"k": 4,
+"solved": 1,
+"pass_rate": 0.25,
+"decision": "keep",
+"mean_tokens": 768.2,
+"mean_tokens_correct": 643.0,
+"truncated": 0.0,
+"reasons": {
+"wrong answer": 3,
+"correct": 1
+},
+"boxed": 4
+},
+{
+"id": "math-precalculus-615",
+"kind": "math",
+"group": "precalculus",
+"level": "Level 1",
+"k": 4,
+"solved": 2,
+"pass_rate": 0.5,
+"decision": "keep",
+"mean_tokens": 530.5,
+"mean_tokens_correct": 382.0,
+"truncated": 0.0,
+"reasons": {
+"correct": 2,
+"wrong answer": 2
+},
+"boxed": 4
+}
+]
+}

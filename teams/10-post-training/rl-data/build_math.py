@@ -39,11 +39,34 @@ def math_rows(subject: str, rows: list[dict]) -> tuple[list[dict], int]:
     return out, skipped
 
 
+def math500_rows(rows: list[dict]) -> list[dict]:
+    """MATH-500 (HuggingFaceH4/MATH-500 test.jsonl): EVALUATION ONLY, never training. It is the 500-problem subset
+    of the MATH test split from OpenAI's PRM800K repo; problems and answers come from hendrycks MATH (MIT)."""
+    out = []
+    for r in rows:
+        uid = "".join(c if c.isalnum() else "_" for c in r["unique_id"])
+        out.append({"id": f"math500-{uid}", "kind": "math", "problem": r["problem"], "answer": r["answer"],
+                    "level": f"Level {r['level']}", "subject": r.get("subject"),
+                    "source": "HuggingFaceH4/MATH-500 (test subset, evaluation only)", "licence": "MIT",
+                    "generator": META["generator"], "licence_table_set": None})
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--parquet-dir", type=Path, required=True)
+    ap.add_argument("--parquet-dir", type=Path)
+    ap.add_argument("--math500-jsonl", type=Path, help="build the MATH-500 evaluation set instead (test.jsonl)")
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
+    if args.math500_jsonl:
+        rows = [json.loads(x) for x in args.math500_jsonl.read_text(encoding="utf-8").splitlines() if x.strip()]
+        tasks = math500_rows(rows)
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text("".join(json.dumps(t, ensure_ascii=False) + "\n" for t in tasks), encoding="utf-8")
+        print(json.dumps({"tasks": len(tasks), "out": str(args.out)}))
+        return 0
+    if args.parquet_dir is None:
+        ap.error("--parquet-dir or --math500-jsonl is required")
     import pyarrow.parquet as pq  # noqa: PLC0415
 
     tasks, skipped = [], {}

@@ -86,6 +86,7 @@ def test_run_survey_decides_keep_too_hard_too_easy_and_counts_tokens():
                                      pool="thread")
     assert [r["decision"] for r in rows] == ["keep", "too_hard", "too_easy"]
     assert rows[0]["pass_rate"] == 0.5 and rows[0]["mean_tokens_correct"] == 10.0 and rows[1]["truncated"] == 0.5
+    assert rows[0]["reasons"] == {"correct": 1, "wrong answer": 1} and rows[0]["boxed"] == 2
     assert timing["sampled_tokens"] == 63
     by = survey.summarise(rows)
     assert by["math/algebra/Level 1"]["keep"] == 1 and by["math/geometry/Level 2"]["too_easy"] == 1
@@ -143,3 +144,19 @@ def test_chat_ids_handle_a_batch_encoding():
     assert got == [5, 6, 7]
     src = (HERE / "survey.py").read_text() + (HERE.parent / "rl-loop" / "tasks.py").read_text()
     assert "isinstance(ids, dict)" not in src and src.count('hasattr(ids, "keys")') == 2
+
+
+def test_failure_reasons_separate_no_answer_from_wrong_answer():
+    tasks = [{"id": "a", "kind": "math", "problem": "x", "answer": "2"}]
+    outs = [r"\boxed{2}", "I am not sure.", r"\boxed{3}"]
+    rows, _ = survey.run_survey(tasks, ["x"], lambda texts, k: [[(o, 5, False) for o in outs]], k=3, workers=1,
+                                pool="thread")
+    assert rows[0]["reasons"] == {"correct": 1, "no answer found": 1, "wrong answer": 1}
+    assert rows[0]["boxed"] == 2
+
+
+def test_math500_rows_are_eval_only_records():
+    got = build_math.math500_rows([{"problem": "p", "answer": "3", "level": 2, "subject": "Algebra",
+                                    "unique_id": "test/algebra/1.json"}])
+    assert got[0]["id"] == "math500-test_algebra_1_json" and got[0]["level"] == "Level 2"
+    assert "evaluation only" in got[0]["source"]
