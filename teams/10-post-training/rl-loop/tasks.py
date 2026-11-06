@@ -70,7 +70,7 @@ class RewardEnvTask:
     def _encode(self, env_id: str, prompt: str) -> list[int]:
         msgs = [{"role": "user", "content": prompt}]
         ids = self.tok.apply_chat_template(msgs, add_generation_prompt=True, tokenize=True)
-        ids = list(ids["input_ids"] if isinstance(ids, dict) else ids)
+        ids = [int(x) for x in (ids["input_ids"] if hasattr(ids, "keys") else ids)]  # BatchEncoding is not a dict
         self._items[tuple(ids)] = env_id
         return ids
 

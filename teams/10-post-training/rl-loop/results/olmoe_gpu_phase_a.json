@@ -1,0 +1,463 @@
+{
+ "what": "G10 RL loop on OLMoE-1B-7B-0125-Instruct (revision b89a7c4bc24fb9e55ce2543c9458ce0ca5c4650e) on Modal, synthetic parity token task (no training data), router frozen, attention trained with fp32 masters",
+ "date": "2026-11-05",
+ "configs": "rl-loop/config/modal_a1_*.yaml, modal_a2_*.yaml (A3 = modal_a2_realistic_vllm on A100-80GB)",
+ "runs": {
+  "a1_l40s_hf_batch": {
+   "gpu_name": "NVIDIA L40S",
+   "sampler": "hf_batch",
+   "steps": 3,
+   "prompts_per_step": 4,
+   "k": 4,
+   "max_new": 32,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 10,
+   "step1_s": 4.018,
+   "mean_step_s_after_step1": 3.79,
+   "mean_times_s_after_step1": {
+    "rollout": 3.051,
+    "reward": 0.002,
+    "old_logprobs": 0.183,
+    "train": 0.553,
+    "sync": 0.0
+   },
+   "mean_rollout_tokens_per_s": 152.8,
+   "peak_gpu_memory_gb": 18.57,
+   "end_gpu_used_gb": 19.82,
+   "mean_mismatch_k3": null,
+   "vllm_sync_path": null,
+   "vllm_sync_check": null,
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 9.697e-05
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 6.2574,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 3,
+     "kl_to_start": 0.004819,
+     "load_ratio_max": 6.2178,
+     "flip_vs_step0": 0.5545
+    }
+   ]
+  },
+  "a1_l40s_vllm": {
+   "gpu_name": "NVIDIA L40S",
+   "sampler": "vllm",
+   "steps": 3,
+   "prompts_per_step": 4,
+   "k": 4,
+   "max_new": 32,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 11,
+   "step1_s": 1.826,
+   "mean_step_s_after_step1": 1.253,
+   "mean_times_s_after_step1": {
+    "rollout": 0.487,
+    "reward": 0.002,
+    "old_logprobs": 0.189,
+    "train": 0.569,
+    "sync": 0.007
+   },
+   "mean_rollout_tokens_per_s": 1038.1,
+   "peak_gpu_memory_gb": 32.25,
+   "end_gpu_used_gb": 33.76,
+   "mean_mismatch_k3": 0.009409,
+   "vllm_sync_path": "collective_rpc",
+   "vllm_sync_check": {
+    "baseline_k3": 0.00479472242295742,
+    "zeroed_unsynced_k3": 3.1704323291778564,
+    "zeroed_synced_k3": 0.00036167167127132416,
+    "restored_k3": 0.00562281534075737,
+    "ok": true,
+    "sync_path": "collective_rpc"
+   },
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 9.618e-05
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 6.0,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 3,
+     "kl_to_start": 0.007145,
+     "load_ratio_max": 5.9688,
+     "flip_vs_step0": 0.5781
+    }
+   ]
+  },
+  "a2_h100_measure36_vllm": {
+   "gpu_name": "NVIDIA H100 80GB HBM3",
+   "sampler": "vllm",
+   "steps": 20,
+   "prompts_per_step": 8,
+   "k": 8,
+   "max_new": 64,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 152,
+   "step1_s": 1.524,
+   "mean_step_s_after_step1": 1.153,
+   "mean_times_s_after_step1": {
+    "rollout": 0.418,
+    "reward": 0.005,
+    "old_logprobs": 0.187,
+    "train": 0.538,
+    "sync": 0.006
+   },
+   "mean_rollout_tokens_per_s": 8427.3,
+   "peak_gpu_memory_gb": 40.98,
+   "end_gpu_used_gb": 42.5,
+   "mean_mismatch_k3": 0.00702,
+   "vllm_sync_path": "collective_rpc",
+   "vllm_sync_check": {
+    "baseline_k3": 0.00784884812310338,
+    "zeroed_unsynced_k3": 3.608844041824341,
+    "zeroed_synced_k3": 0.0003939778544008732,
+    "restored_k3": 0.003634392167441547,
+    "ok": true,
+    "sync_path": "collective_rpc"
+   },
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 0.0002617
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 5.6748,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 10,
+     "load_ratio_max": 5.6748,
+     "flip_vs_step0": 0.5903
+    },
+    {
+     "step": 20,
+     "load_ratio_max": 5.6953,
+     "flip_vs_step0": 0.5877
+    }
+   ]
+  },
+  "a2_h100_measure36_hf_batch": {
+   "gpu_name": "NVIDIA H100 80GB HBM3",
+   "sampler": "hf_batch",
+   "steps": 20,
+   "prompts_per_step": 8,
+   "k": 8,
+   "max_new": 64,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 150,
+   "step1_s": 7.683,
+   "mean_step_s_after_step1": 6.134,
+   "mean_times_s_after_step1": {
+    "rollout": 5.492,
+    "reward": 0.004,
+    "old_logprobs": 0.164,
+    "train": 0.474,
+    "sync": 0.0
+   },
+   "mean_rollout_tokens_per_s": 650.8,
+   "peak_gpu_memory_gb": 24.11,
+   "end_gpu_used_gb": 26.96,
+   "mean_mismatch_k3": null,
+   "vllm_sync_path": null,
+   "vllm_sync_check": null,
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 0.000261
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 5.8685,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 10,
+     "load_ratio_max": 5.8592,
+     "flip_vs_step0": 0.5739
+    },
+    {
+     "step": 20,
+     "load_ratio_max": 5.8873,
+     "flip_vs_step0": 0.6209
+    }
+   ]
+  },
+  "a2_h100_realistic_vllm": {
+   "gpu_name": "NVIDIA H100 80GB HBM3",
+   "sampler": "vllm",
+   "steps": 10,
+   "prompts_per_step": 16,
+   "k": 8,
+   "max_new": 512,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 148,
+   "step1_s": 7.577,
+   "mean_step_s_after_step1": 7.241,
+   "mean_times_s_after_step1": {
+    "rollout": 4.327,
+    "reward": 0.01,
+    "old_logprobs": 0.75,
+    "train": 2.148,
+    "sync": 0.006
+   },
+   "mean_rollout_tokens_per_s": 15146.3,
+   "peak_gpu_memory_gb": 50.69,
+   "end_gpu_used_gb": 53.16,
+   "mean_mismatch_k3": 0.00481,
+   "vllm_sync_path": "collective_rpc",
+   "vllm_sync_check": {
+    "baseline_k3": 0.00784884812310338,
+    "zeroed_unsynced_k3": 3.727107524871826,
+    "zeroed_synced_k3": 0.0003939778544008732,
+    "restored_k3": 0.003634392167441547,
+    "ok": true,
+    "sync_path": "collective_rpc"
+   },
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 0.0001865
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 3.7852,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 10,
+     "kl_to_start": 0.003451,
+     "load_ratio_max": 3.7773,
+     "flip_vs_step0": 0.4807
+    }
+   ]
+  },
+  "a2_h100_realistic_hf_batch": {
+   "gpu_name": "NVIDIA H100 80GB HBM3",
+   "sampler": "hf_batch",
+   "steps": 4,
+   "prompts_per_step": 16,
+   "k": 8,
+   "max_new": 512,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 59,
+   "step1_s": 111.42,
+   "mean_step_s_after_step1": 93.715,
+   "mean_times_s_after_step1": {
+    "rollout": 90.884,
+    "reward": 0.009,
+    "old_logprobs": 0.722,
+    "train": 2.099,
+    "sync": 0.0
+   },
+   "mean_rollout_tokens_per_s": 721.1,
+   "peak_gpu_memory_gb": 45.24,
+   "end_gpu_used_gb": 60.08,
+   "mean_mismatch_k3": null,
+   "vllm_sync_path": null,
+   "vllm_sync_check": null,
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 0.0001147
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 3.5176,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 4,
+     "kl_to_start": 0.003409,
+     "load_ratio_max": 3.5234,
+     "flip_vs_step0": 0.4324
+    }
+   ]
+  },
+  "a3_a100_realistic_vllm": {
+   "gpu_name": "NVIDIA A100-SXM4-80GB",
+   "sampler": "vllm",
+   "steps": 10,
+   "prompts_per_step": 16,
+   "k": 8,
+   "max_new": 512,
+   "trainable_params": 268500992,
+   "fp32_master_params": 268500992,
+   "router_unchanged": true,
+   "router_checksum_before": "08255532f722b0a49ab4cbbd0f70b701fdfedc582880e04c8c99547154521340",
+   "groups_used_total": 149,
+   "step1_s": 14.611,
+   "mean_step_s_after_step1": 14.089,
+   "mean_times_s_after_step1": {
+    "rollout": 7.137,
+    "reward": 0.016,
+    "old_logprobs": 1.809,
+    "train": 5.118,
+    "sync": 0.009
+   },
+   "mean_rollout_tokens_per_s": 9183.3,
+   "peak_gpu_memory_gb": 51.26,
+   "end_gpu_used_gb": 53.43,
+   "mean_mismatch_k3": 0.004736,
+   "vllm_sync_path": "collective_rpc",
+   "vllm_sync_check": {
+    "baseline_k3": 0.008211679756641388,
+    "zeroed_unsynced_k3": 3.3595707416534424,
+    "zeroed_synced_k3": 0.0005901362746953964,
+    "restored_k3": 0.005420535570010543,
+    "ok": true,
+    "sync_path": "collective_rpc"
+   },
+   "trainable_weight_change": {
+    "share_changed": 0.9999,
+    "relative_l2": 0.000187
+   },
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   },
+   "routing": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 3.7129,
+     "flip_vs_step0": 0.0
+    },
+    {
+     "step": 10,
+     "kl_to_start": 0.003811,
+     "load_ratio_max": 3.7207,
+     "flip_vs_step0": 0.4919
+    }
+   ]
+  }
+ },
+ "spend_usd_by_run": [
+  {
+   "kind": "weights",
+   "run_id": "weights",
+   "gpu": null,
+   "seconds": 171.0,
+   "usd": 0.0256
+  },
+  {
+   "kind": "code_contests",
+   "run_id": "code_contests",
+   "gpu": null,
+   "seconds": 49.5,
+   "usd": 0.0074
+  },
+  {
+   "kind": "train",
+   "run_id": "a1_smoke",
+   "gpu": "L40S",
+   "seconds": 128.0,
+   "usd": 0.0886
+  },
+  {
+   "kind": "train",
+   "run_id": "a1b_smoke_vllm",
+   "gpu": "L40S",
+   "seconds": 116.6,
+   "usd": 0.0807
+  },
+  {
+   "kind": "survey",
+   "run_id": "b1_survey",
+   "gpu": "L40S",
+   "seconds": 242.1,
+   "usd": 0.1675
+  },
+  {
+   "kind": "train",
+   "run_id": "a2_h100",
+   "gpu": "H100!",
+   "seconds": 920.5,
+   "usd": 1.1476
+  },
+  {
+   "kind": "train",
+   "run_id": "a3_a100",
+   "gpu": "A100-80GB",
+   "seconds": 305.5,
+   "usd": 0.2577
+  },
+  {
+   "kind": "survey",
+   "run_id": "b1_survey_r2",
+   "gpu": "L40S",
+   "seconds": 2271.9,
+   "usd": 1.5714
+  }
+ ]
+}

@@ -39,15 +39,43 @@ def advantages(rewards: torch.Tensor, algo: str, eps: float = 1e-4) -> torch.Ten
     return (r - mean) * k / (k - 1)  # r_i - mean of the others
 
 
+def tis_weights(old_lp: torch.Tensor, rollout_lp: torch.Tensor, mask: torch.Tensor, algo: str,
+                clip_max: float) -> torch.Tensor:
+    """Truncated importance weights for the sampler/trainer gap (TIS; Yao et al. 2025, research/g10_gpu/q3).
+
+    The completions were sampled by vLLM (rollout_lp) but the PPO ratio uses the trainer's own logprobs (old_lp),
+    so each term is re-weighted by pi_train_old / pi_rollout, truncated at clip_max so one token can't dominate.
+    Token level for grpo, dr_grpo and rloo ([k, T]); sequence level for gspo ([k], geometric mean over tokens),
+    to match its sequence ratio. Detached: the weights scale the gradient, they don't receive one.
+    """
+    m = mask.float()
+    d = (old_lp - rollout_lp).detach() * m
+    if algo == "gspo":
+        return torch.exp(d.sum(-1) / m.sum(-1).clamp_min(1)).clamp(max=clip_max)
+    return torch.exp(d).clamp(max=clip_max) * m
+
+
+def mismatch(old_lp: torch.Tensor, rollout_lp: torch.Tensor, mask: torch.Tensor) -> dict:
+    """How far the sampler is from the trainer on the sampled tokens: mean |log ratio| and the K3 estimate of
+    KL(sampler || trainer), exp(r) - 1 - r with r = log pi_train - log pi_rollout."""
+    m = mask.float()
+    r = (old_lp - rollout_lp).detach() * m
+    n = m.sum().clamp_min(1)
+    return {"abs_logratio": float((r.abs()).sum() / n), "k3": float(((torch.exp(r) - 1 - r) * m).sum() / n)}
+
+
 def policy_loss(new_lp: torch.Tensor, old_lp: torch.Tensor, adv: torch.Tensor, mask: torch.Tensor, algo: str,
-                clip_eps: float = 0.2, ref_lp: torch.Tensor | None = None, kl_coef: float = 0.0) -> tuple[torch.Tensor, dict]:
-    """new_lp, old_lp, ref_lp, mask: [k, T]; adv: [k]. Returns (loss, stats)."""
+                clip_eps: float = 0.2, ref_lp: torch.Tensor | None = None, kl_coef: float = 0.0,
+                is_weight: torch.Tensor | None = None) -> tuple[torch.Tensor, dict]:
+    """new_lp, old_lp, ref_lp, mask: [k, T]; adv: [k]; is_weight: tis_weights() or None. Returns (loss, stats)."""
     m = mask.float()
     n_tok = m.sum(-1).clamp_min(1)
     log_ratio = (new_lp - old_lp) * m
     if algo == "gspo":
         seq_ratio = torch.exp(log_ratio.sum(-1) / n_tok)
         surr = torch.minimum(seq_ratio * adv, seq_ratio.clamp(1 - clip_eps, 1 + clip_eps) * adv)
+        if is_weight is not None:
+            surr = surr * is_weight
         loss = -surr.mean()
         clipped = ((seq_ratio - 1).abs() > clip_eps).float().mean()
         ratio_mean = seq_ratio.mean()
@@ -55,6 +83,8 @@ def policy_loss(new_lp: torch.Tensor, old_lp: torch.Tensor, adv: torch.Tensor, m
         ratio = torch.exp(log_ratio)
         a = adv[:, None]
         surr = torch.minimum(ratio * a, ratio.clamp(1 - clip_eps, 1 + clip_eps) * a) * m
+        if is_weight is not None:
+            surr = surr * is_weight
         if algo == "grpo":
             loss = -(surr.sum(-1) / n_tok).mean()
         else:  # dr_grpo, rloo: constant normaliser, no per-sequence length division

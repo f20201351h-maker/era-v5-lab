@@ -9,6 +9,7 @@ padding is needed (Team 5's attention has no padding mask). Tokens after an EOS 
 """
 from __future__ import annotations
 
+import contextlib
 from typing import Callable
 
 import torch
@@ -21,11 +22,19 @@ class Policy:
         self._forward = forward
         self.eos_id = eos_id
         self.device = device
+        self.amp_dtype: torch.dtype | None = None  # set by use_fp32_master(); None = no autocast
+
+    def autocast(self):
+        """bf16 autocast when the trainable weights are fp32 masters inside a bf16 model, else a no-op."""
+        if self.amp_dtype is None:
+            return contextlib.nullcontext()
+        return torch.autocast(device_type=torch.device(self.device).type, dtype=self.amp_dtype)
 
     def logits(self, ids: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
         if mask is None:
             mask = torch.ones_like(ids, dtype=torch.bool)
-        return self._forward(self.model, ids, mask)
+        with self.autocast():
+            return self._forward(self.model, ids, mask)
 
     @torch.no_grad()
     def sample(self, prompt: list[int], k: int, max_new: int, temperature: float = 1.0,
@@ -71,10 +80,12 @@ class HFPolicy(Policy):
         self.model.eval()
         ids = torch.tensor([prompt] * k, dtype=torch.long, device=self.device)
         pad = self.eos_id if self.eos_id is not None else 0
-        out = self.model.generate(input_ids=ids, attention_mask=torch.ones_like(ids), max_new_tokens=max_new,
-                                  min_new_tokens=max_new if self.eos_id is None else 0,
-                                  do_sample=temperature > 0, temperature=temperature if temperature > 0 else None,
-                                  top_k=0, top_p=1.0, eos_token_id=self.eos_id, pad_token_id=pad)
+        with self.autocast():
+            out = self.model.generate(input_ids=ids, attention_mask=torch.ones_like(ids), max_new_tokens=max_new,
+                                      min_new_tokens=max_new if self.eos_id is None else 0,
+                                      do_sample=temperature > 0,
+                                      temperature=temperature if temperature > 0 else None,
+                                      top_k=0, top_p=1.0, eos_token_id=self.eos_id, pad_token_id=pad)
         self.model.train(was_training)
         comp = out[:, len(prompt):]
         if comp.shape[1] < max_new:
@@ -84,6 +95,25 @@ class HFPolicy(Policy):
             after_eos = torch.cumsum((comp == self.eos_id).long(), 1) - (comp == self.eos_id).long() > 0
             cmask = ~after_eos
         return torch.cat([ids, comp], 1), cmask
+
+
+def use_fp32_master(policy: Policy) -> int:
+    """Keep the trainable weights in fp32 and run the model under bf16 autocast.
+
+    AdamW on bf16 weights loses small updates: bf16 keeps about 3 significant digits, so at lr 1e-6 a weight near
+    0.02 usually rounds back to itself (measured: one step changed 2% of bf16 weights vs 100% of fp32 weights).
+    With fp32 masters the optimiser updates fp32 tensors, and autocast casts them to bf16 for each matmul.
+    Frozen weights (router, experts) stay bf16, so memory grows only by the trainable part. Returns the number
+    of parameters converted (0 for an fp32 model, where nothing changes).
+    """
+    n = 0
+    for p in policy.model.parameters():
+        if p.requires_grad and p.dtype in (torch.bfloat16, torch.float16):
+            p.data = p.data.float()
+            n += p.numel()
+    if n:
+        policy.amp_dtype = torch.bfloat16
+    return n
 
 
 def hf_policy(model: nn.Module, eos_id: int | None = None, device: str = "cpu") -> Policy:

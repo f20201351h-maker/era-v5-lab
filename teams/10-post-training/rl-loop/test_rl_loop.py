@@ -198,7 +198,8 @@ def test_smoke_tiny_olmoe_heldout_reward_rises_with_the_router_frozen(tmp_path):
     for algo in grpo.ALGOS:  # a loop, not parametrize: this repo's pr-guard flags "+@pytest..." lines as emails
         s = _smoke("smoke_tiny_olmoe.yaml", tmp_path / algo, algo=algo)
         assert s["router_unchanged"], algo
-        # starts near 1/16; each algo ends at least +0.15 higher over seeds 1234 and 7 (checked): +0.1 is a safe bar
+        # starts near 1/16. With the batched sampler (5 Nov) the gains over seeds 1234 and 7 were +0.39 to +0.53,
+        # except dr_grpo on seed 7 at +0.107, so +0.1 is the bar but that case is close to it
         assert s["heldout_reward_end"] >= s["heldout_reward_start"] + 0.1, (algo, s["heldout_curve"])
         assert (tmp_path / algo / "out" / "metrics.jsonl").exists() and (tmp_path / algo / "out" / "summary.json").exists()
 

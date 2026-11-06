@@ -1,0 +1,553 @@
+{
+ "what": "Phase C: frozen-router RL on OLMoE-1B-7B-0125-DPO (revision 0f2e2e1) with MATH train tasks, raw problem as prompt",
+ "preregistration": "pre-registered bar, lr rule and setup; deviations: micro_rows 2 and expandable_segments after an out-of-memory crash at step 84, cap 80 min",
+ "pilot_lr_choice": {
+  "lr1e-6": {
+   "mean_clip_frac": 0.0,
+   "kl_to_start_end": 0.0008805,
+   "train_reward_steps_1_10": 0.3594,
+   "train_reward_steps_21_30": 0.4281,
+   "mean_step_s": 12.124,
+   "groups_used_total": 365,
+   "router_unchanged": true,
+   "sync_ok": true,
+   "peak_gpu_memory_gb": 68.6
+  },
+  "lr5e-6": {
+   "mean_clip_frac": 0.0,
+   "kl_to_start_end": 0.01784,
+   "train_reward_steps_1_10": 0.4141,
+   "train_reward_steps_21_30": 0.518,
+   "mean_step_s": 11.882,
+   "groups_used_total": 378,
+   "router_unchanged": true,
+   "sync_ok": true,
+   "peak_gpu_memory_gb": 68.21
+  },
+  "choice": "5e-6",
+  "reasons_against_5e-6": [],
+  "note": "clip_frac is 0 by construction with 1 PPO epoch (ratio is 1), so that criterion could not trigger"
+ },
+ "runs": {
+  "c1_grpo": {
+   "checks": {
+    "1_heldout_gain_ge_5pts_and_ci_excludes_0": true,
+    "2_router_unchanged": true,
+    "3_kl_to_start_le_0.1": true,
+    "4_load_ratio_rise_le_10pct": true
+   },
+   "meets_bar": true,
+   "heldout_change": {
+    "problems": 199,
+    "start": 0.3719,
+    "end": 0.5214,
+    "diff": 0.1495,
+    "ci_low": 0.1043,
+    "ci_high": 0.1935,
+    "ci_excludes_zero": true,
+    "resamples": 10000
+   },
+   "heldout_curve": [
+    [
+     0,
+     0.37185929648241206
+    ],
+    [
+     25,
+     0.4937185929648241
+    ],
+    [
+     50,
+     0.47738693467336685
+    ],
+    [
+     75,
+     0.5150753768844221
+    ],
+    [
+     100,
+     0.5
+    ],
+    [
+     125,
+     0.5364321608040201
+    ],
+    [
+     150,
+     0.5389447236180904
+    ],
+    [
+     175,
+     0.49246231155778897
+    ],
+    [
+     200,
+     0.5213567839195979
+    ]
+   ],
+   "kl_to_start_end": 0.08208,
+   "load_ratio_max_rel_rise": 0.0246,
+   "routing_curve": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 7.4543,
+     "flip_vs_step0": 0.0,
+     "top1_flip_vs_step0": 0.0,
+     "mass_shift_vs_step0": 0.0
+    },
+    {
+     "step": 25,
+     "kl_to_start": 0.01258,
+     "load_ratio_max": 7.474,
+     "flip_vs_step0": 0.9007,
+     "top1_flip_vs_step0": 0.0394,
+     "mass_shift_vs_step0": 0.02062
+    },
+    {
+     "step": 50,
+     "kl_to_start": 0.02966,
+     "load_ratio_max": 7.5077,
+     "flip_vs_step0": 0.9648,
+     "top1_flip_vs_step0": 0.0563,
+     "mass_shift_vs_step0": 0.0295
+    },
+    {
+     "step": 75,
+     "kl_to_start": 0.04437,
+     "load_ratio_max": 7.4999,
+     "flip_vs_step0": 0.9815,
+     "top1_flip_vs_step0": 0.0671,
+     "mass_shift_vs_step0": 0.03531
+    },
+    {
+     "step": 100,
+     "kl_to_start": 0.05163,
+     "load_ratio_max": 7.5237,
+     "flip_vs_step0": 0.9893,
+     "top1_flip_vs_step0": 0.0737,
+     "mass_shift_vs_step0": 0.03898
+    },
+    {
+     "step": 125,
+     "kl_to_start": 0.06147,
+     "load_ratio_max": 7.5336,
+     "flip_vs_step0": 0.9928,
+     "top1_flip_vs_step0": 0.08,
+     "mass_shift_vs_step0": 0.04214
+    },
+    {
+     "step": 150,
+     "kl_to_start": 0.06067,
+     "load_ratio_max": 7.547,
+     "flip_vs_step0": 0.9939,
+     "top1_flip_vs_step0": 0.0815,
+     "mass_shift_vs_step0": 0.04324
+    },
+    {
+     "step": 175,
+     "kl_to_start": 0.0717,
+     "load_ratio_max": 7.5537,
+     "flip_vs_step0": 0.9945,
+     "top1_flip_vs_step0": 0.0845,
+     "mass_shift_vs_step0": 0.04462
+    },
+    {
+     "step": 200,
+     "kl_to_start": 0.08208,
+     "load_ratio_max": 7.561,
+     "flip_vs_step0": 0.9959,
+     "top1_flip_vs_step0": 0.0886,
+     "mass_shift_vs_step0": 0.04669
+    }
+   ],
+   "per_step_mean": {
+    "set_flip": 0.4579,
+    "top1_flip": 0.0123,
+    "mass_shift": 0.00648
+   },
+   "train_reward_first20_last20": [
+    0.441,
+    0.597
+   ],
+   "tokens_per_completion_first20_last20": [
+    526.5,
+    435.6
+   ],
+   "mean_step_s_after_step1": 11.92,
+   "mean_times_s_after_step1": {
+    "rollout": 6.128,
+    "reward": 0.29,
+    "old_logprobs": 1.432,
+    "train": 4.064,
+    "sync": 0.006
+   },
+   "peak_gpu_memory_gb": 49.29,
+   "mean_mismatch_k3": 0.000871,
+   "router_checksum_before": "ac57cbf091b7e05eb1c16469156ff7dd00232fb20b74698560e3b6b8e6173bb6",
+   "router_checksum_after": "ac57cbf091b7e05eb1c16469156ff7dd00232fb20b74698560e3b6b8e6173bb6",
+   "trainable_weight_change": {
+    "share_changed": 1.0,
+    "relative_l2": 0.003872
+   },
+   "groups_used_total": 2230,
+   "gpu_name": "NVIDIA H100 80GB HBM3",
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   }
+  },
+  "c2_gspo": {
+   "checks": {
+    "1_heldout_gain_ge_5pts_and_ci_excludes_0": true,
+    "2_router_unchanged": true,
+    "3_kl_to_start_le_0.1": true,
+    "4_load_ratio_rise_le_10pct": true
+   },
+   "meets_bar": true,
+   "heldout_change": {
+    "problems": 199,
+    "start": 0.3719,
+    "end": 0.5327,
+    "diff": 0.1608,
+    "ci_low": 0.1156,
+    "ci_high": 0.206,
+    "ci_excludes_zero": true,
+    "resamples": 10000
+   },
+   "heldout_curve": [
+    [
+     0,
+     0.37185929648241206
+    ],
+    [
+     25,
+     0.4635678391959799
+    ],
+    [
+     50,
+     0.49120603015075376
+    ],
+    [
+     75,
+     0.5012562814070352
+    ],
+    [
+     100,
+     0.5037688442211056
+    ],
+    [
+     125,
+     0.5339195979899497
+    ],
+    [
+     150,
+     0.5439698492462312
+    ],
+    [
+     175,
+     0.5314070351758794
+    ],
+    [
+     200,
+     0.5326633165829145
+    ]
+   ],
+   "kl_to_start_end": 0.09345,
+   "load_ratio_max_rel_rise": 0.0444,
+   "routing_curve": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 7.4543,
+     "flip_vs_step0": 0.0,
+     "top1_flip_vs_step0": 0.0,
+     "mass_shift_vs_step0": 0.0
+    },
+    {
+     "step": 25,
+     "kl_to_start": 0.01278,
+     "load_ratio_max": 7.489,
+     "flip_vs_step0": 0.9108,
+     "top1_flip_vs_step0": 0.039,
+     "mass_shift_vs_step0": 0.02096
+    },
+    {
+     "step": 50,
+     "kl_to_start": 0.02171,
+     "load_ratio_max": 7.4709,
+     "flip_vs_step0": 0.9504,
+     "top1_flip_vs_step0": 0.0493,
+     "mass_shift_vs_step0": 0.02601
+    },
+    {
+     "step": 75,
+     "kl_to_start": 0.03234,
+     "load_ratio_max": 7.4709,
+     "flip_vs_step0": 0.9801,
+     "top1_flip_vs_step0": 0.0646,
+     "mass_shift_vs_step0": 0.03342
+    },
+    {
+     "step": 100,
+     "kl_to_start": 0.04365,
+     "load_ratio_max": 7.4859,
+     "flip_vs_step0": 0.9893,
+     "top1_flip_vs_step0": 0.0762,
+     "mass_shift_vs_step0": 0.03881
+    },
+    {
+     "step": 125,
+     "kl_to_start": 0.06081,
+     "load_ratio_max": 7.4911,
+     "flip_vs_step0": 0.995,
+     "top1_flip_vs_step0": 0.0858,
+     "mass_shift_vs_step0": 0.04372
+    },
+    {
+     "step": 150,
+     "kl_to_start": 0.06653,
+     "load_ratio_max": 7.5051,
+     "flip_vs_step0": 0.9965,
+     "top1_flip_vs_step0": 0.0937,
+     "mass_shift_vs_step0": 0.0475
+    },
+    {
+     "step": 175,
+     "kl_to_start": 0.07747,
+     "load_ratio_max": 7.5206,
+     "flip_vs_step0": 0.9975,
+     "top1_flip_vs_step0": 0.096,
+     "mass_shift_vs_step0": 0.04923
+    },
+    {
+     "step": 200,
+     "kl_to_start": 0.09345,
+     "load_ratio_max": 7.5356,
+     "flip_vs_step0": 0.9978,
+     "top1_flip_vs_step0": 0.1034,
+     "mass_shift_vs_step0": 0.05224
+    }
+   ],
+   "per_step_mean": {
+    "set_flip": 0.4609,
+    "top1_flip": 0.0123,
+    "mass_shift": 0.00657
+   },
+   "train_reward_first20_last20": [
+    0.431,
+    0.587
+   ],
+   "tokens_per_completion_first20_last20": [
+    537.8,
+    405.2
+   ],
+   "mean_step_s_after_step1": 12.736,
+   "mean_times_s_after_step1": {
+    "rollout": 6.705,
+    "reward": 0.344,
+    "old_logprobs": 1.477,
+    "train": 4.202,
+    "sync": 0.007
+   },
+   "peak_gpu_memory_gb": 49.29,
+   "mean_mismatch_k3": 0.000901,
+   "router_checksum_before": "ac57cbf091b7e05eb1c16469156ff7dd00232fb20b74698560e3b6b8e6173bb6",
+   "router_checksum_after": "ac57cbf091b7e05eb1c16469156ff7dd00232fb20b74698560e3b6b8e6173bb6",
+   "trainable_weight_change": {
+    "share_changed": 1.0,
+    "relative_l2": 0.003893
+   },
+   "groups_used_total": 2247,
+   "gpu_name": "NVIDIA H100 80GB HBM3",
+   "versions": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.19.0",
+    "vllm": "0.32.0"
+   }
+  },
+  "c3_grpo_router_trainable": {
+   "checks": {
+    "1_heldout_gain_ge_5pts_and_ci_excludes_0": true,
+    "2_router_unchanged": false,
+    "3_kl_to_start_le_0.1": true,
+    "4_load_ratio_rise_le_10pct": true
+   },
+   "heldout_change": {
+    "problems": 199,
+    "start": 0.3719,
+    "end": 0.5214,
+    "diff": 0.1495,
+    "ci_low": 0.1055,
+    "ci_high": 0.1922,
+    "ci_excludes_zero": true,
+    "resamples": 10000
+   },
+   "heldout_curve": [
+    [
+     0,
+     0.37185929648241206
+    ],
+    [
+     25,
+     0.48743718592964824
+    ],
+    [
+     50,
+     0.4849246231155779
+    ],
+    [
+     75,
+     0.4937185929648241
+    ],
+    [
+     100,
+     0.49748743718592964
+    ],
+    [
+     125,
+     0.5037688442211056
+    ],
+    [
+     150,
+     0.4836683417085427
+    ],
+    [
+     175,
+     0.5125628140703518
+    ],
+    [
+     200,
+     0.5213567839195979
+    ]
+   ],
+   "kl_to_start_end": 0.05516,
+   "load_ratio_max_rel_rise": 0.0685,
+   "load_ratio_per_layer_start": [
+    5.1687,
+    5.6626,
+    4.0784,
+    4.1007,
+    7.0889,
+    7.4543,
+    6.5686,
+    7.0795,
+    7.1686,
+    7.3731,
+    6.7736,
+    7.2183,
+    6.3211,
+    5.6704,
+    5.0678,
+    6.5903
+   ],
+   "load_ratio_per_layer_end": [
+    5.5228,
+    5.6683,
+    4.1022,
+    4.0712,
+    7.18,
+    7.4704,
+    6.567,
+    7.1945,
+    7.2027,
+    7.3803,
+    6.8818,
+    7.2752,
+    6.465,
+    5.8205,
+    5.164,
+    6.6576
+   ],
+   "routing_curve": [
+    {
+     "step": 0,
+     "kl_to_start": 0.0,
+     "flip_noise_floor": 0.0,
+     "load_ratio_max": 7.4543,
+     "flip_vs_step0": 0.0,
+     "top1_flip_vs_step0": 0.0,
+     "mass_shift_vs_step0": 0.0
+    },
+    {
+     "step": 25,
+     "kl_to_start": 0.01385,
+     "load_ratio_max": 7.474,
+     "flip_vs_step0": 0.9033,
+     "top1_flip_vs_step0": 0.0409,
+     "mass_shift_vs_step0": 0.02114
+    },
+    {
+     "step": 50,
+     "kl_to_start": 0.0272,
+     "load_ratio_max": 7.4751,
+     "flip_vs_step0": 0.9561,
+     "top1_flip_vs_step0": 0.0527,
+     "mass_shift_vs_step0": 0.02721
+    },
+    {
+     "step": 75,
+     "kl_to_start": 0.03539,
+     "load_ratio_max": 7.4476,
+     "flip_vs_step0": 0.9712,
+     "top1_flip_vs_step0": 0.0595,
+     "mass_shift_vs_step0": 0.03084
+    },
+    {
+     "step": 100,
+     "kl_to_start": 0.03731,
+     "load_ratio_max": 7.4704,
+     "flip_vs_step0": 0.9782,
+     "top1_flip_vs_step0": 0.066,
+     "mass_shift_vs_step0": 0.03401
+    },
+    {
+     "step": 125,
+     "kl_to_start": 0.03764,
+     "load_ratio_max": 7.4797,
+     "flip_vs_step0": 0.9854,
+     "top1_flip_vs_step0": 0.0705,
+     "mass_shift_vs_step0": 0.03651
+    },
+    {
+     "step": 150,
+     "kl_to_start": 0.04085,
+     "load_ratio_max": 7.4911,
+     "flip_vs_step0": 0.9876,
+     "top1_flip_vs_step0": 0.075,
+     "mass_shift_vs_step0": 0.03831
+    },
+    {
+     "step": 175,
+     "kl_to_start": 0.04994,
+     "load_ratio_max": 7.5066,
+     "flip_vs_step0": 0.9926,
+     "top1_flip_vs_step0": 0.0807,
+     "mass_shift_vs_step0": 0.04144
+    },
+    {
+     "step": 200,
+     "kl_to_start": 0.05516,
+     "load_ratio_max": 7.4704,
+     "flip_vs_step0": 0.9943,
+     "top1_flip_vs_step0": 0.0854,
+     "mass_shift_vs_step0": 0.04396
+    }
+   ],
+   "tokens_per_completion_first20_last20": [
+    540.7,
+    465.9
+   ],
+   "router_trainable": true,
+   "trainable_params": 270598144,
+   "router_checksum_before": "ac57cbf091b7e05eb1c16469156ff7dd00232fb20b74698560e3b6b8e6173bb6",
+   "router_checksum_after": "5a6ae4c080e76f76fe9a26a4ef80bb87ff6ecf0e6871995e75c501bce91908c6",
+   "mean_step_s_after_step1": 13.067,
+   "peak_gpu_memory_gb": 49.56,
+   "mean_mismatch_k3": 0.00085
+  }
+ }
+}
