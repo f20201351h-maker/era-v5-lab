@@ -548,6 +548,108 @@
    "mean_step_s_after_step1": 13.067,
    "peak_gpu_memory_gb": 49.56,
    "mean_mismatch_k3": 0.00085
+  },
+  "c4_grpo_len2048": {
+   "what": "C1 rerun (same seed and settings) with an extra held-out eval at max_new 2048 at steps 0 and 200; trained attention weights saved",
+   "heldout_change_1024": {
+    "problems": 199,
+    "start": 0.3719,
+    "end": 0.5402,
+    "diff": 0.1683,
+    "ci_low": 0.1256,
+    "ci_high": 0.2111,
+    "ci_excludes_zero": true,
+    "resamples": 10000
+   },
+   "heldout_curve_1024": [
+    [
+     0,
+     0.37185929648241206
+    ],
+    [
+     25,
+     0.46608040201005024
+    ],
+    [
+     50,
+     0.4472361809045226
+    ],
+    [
+     75,
+     0.4836683417085427
+    ],
+    [
+     100,
+     0.4937185929648241
+    ],
+    [
+     125,
+     0.5238693467336684
+    ],
+    [
+     150,
+     0.5314070351758794
+    ],
+    [
+     175,
+     0.5125628140703518
+    ],
+    [
+     200,
+     0.5402010050251256
+    ]
+   ],
+   "length_1024": {
+    "start": {
+     "truncated": 0.0867,
+     "mean_tokens": 543.6
+    },
+    "end": {
+     "truncated": 0.0402,
+     "mean_tokens": 425.2
+    }
+   },
+   "extra_eval_2048": {
+    "max_new": 2048,
+    "start": {
+     "pass": 0.3793969849246231,
+     "truncated": 0.0075,
+     "mean_tokens": 568.9
+    },
+    "end": {
+     "pass": 0.5175879396984925,
+     "truncated": 0.0013,
+     "mean_tokens": 430.6
+    },
+    "change": {
+     "problems": 199,
+     "start": 0.3794,
+     "end": 0.5176,
+     "diff": 0.1382,
+     "ci_low": 0.0905,
+     "ci_high": 0.1859,
+     "ci_excludes_zero": true,
+     "resamples": 10000
+    }
+   },
+   "kl_to_start_end": 0.06933,
+   "router_unchanged": true,
+   "routing_end": {
+    "step": 200,
+    "truncated": 0.0402,
+    "mean_tokens": 425.2,
+    "kl_to_start": 0.06933,
+    "load_ratio_max": 7.5061,
+    "flip_vs_step0": 0.996,
+    "top1_flip_vs_step0": 0.0873,
+    "mass_shift_vs_step0": 0.04581
+   },
+   "saved_trainable_weights": {
+    "path": "/vol/ckpt/c4_grpo_attention_bf16.pt",
+    "bytes": 537034493,
+    "sha256": "102b417ca74bd32feb5cd3243247c6a77b09caa7ba53dc094131912b31bc7708"
+   },
+   "mean_step_s_after_step1": 13.12
   }
  }
 }

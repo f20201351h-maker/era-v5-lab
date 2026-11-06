@@ -311,3 +311,26 @@ def test_router_trainable_control_changes_the_checksum_and_does_not_raise(tmp_pa
     cfg["train"].update(steps=5, eval_every=5, router_trainable=True)
     s = train.train(cfg)
     assert s["router_trainable"] and not s["router_unchanged"] and s["router_params_frozen"] == []
+
+
+def test_extra_budget_eval_length_stats_and_saved_weights(tmp_path):
+    cfg = yaml.safe_load((HERE / "config" / "smoke_tiny_olmoe.yaml").read_text())
+    cfg.update(out_dir=str(tmp_path / "out"), verbose=False)
+    cfg["train"].update(steps=4, eval_every=4, extra_eval_max_new=3, save_trainable=str(tmp_path / "w.pt"))
+    s = train.train(cfg)
+    e = s["extra_eval"]
+    assert e["max_new"] == 3 and 0 <= e["start"]["pass"] <= 1 and e["change"]["problems"] == 64
+    assert e["start"]["truncated"] == 1.0  # no EOS in the tiny model: every completion runs to the cap
+    assert s["routing_curve"][0]["truncated"] == 1.0 and s["routing_curve"][0]["mean_tokens"] == 2.0
+    w = torch.load(tmp_path / "w.pt")
+    assert s["saved_trainable_weights"]["bytes"] > 0 and all(v.dtype == torch.bfloat16 for v in w.values())
+    assert len(w) == sum(1 for p in tiny_olmoe().parameters())  - 2  # every trainable tensor (router excluded)
+
+
+def test_length_stats_counts_cut_answers_only():
+    from rollout import Rollout
+    seq = torch.tensor([[1, 5, 5, 5], [1, 5, 9, 0], [1, 5, 5, 9]])  # prompt [1], 3 new tokens, eos = 9
+    cmask = torch.tensor([[True, True, True], [True, True, False], [True, True, True]])
+    st = train.length_stats([Rollout(seq, cmask)], 3, 9)
+    assert st["truncated"] == round(1 / 3, 4)  # row 0 hit the cap without EOS; row 2 ended with EOS at the cap
+    assert st["mean_tokens"] == round(8 / 3, 1)

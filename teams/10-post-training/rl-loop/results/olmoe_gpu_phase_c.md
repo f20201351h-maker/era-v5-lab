@@ -60,11 +60,23 @@ Measured on 8 held-out prompts with their step-0 completions. Two identical forw
   - The router checksum is still the cheap, exact proof of "frozen" that Gate 4 asks for.
 - At step 0 OLMoE's load is already uneven on this text: the busiest expert in a layer gets 4.1 to 7.5 times the mean load. That is why the bar uses the change from step 0, not a fixed limit.
 
-## Caveats
+## Is the gain just answers fitting the token limit? (C4, pre-registered)
 
-- **Part of the gain may be format and length, not reasoning.** Average completion length fell during training: grpo 527 → 436 tokens, gspo 538 → 405, router trainable 541 → 466. In survey B1, 16% of samples hit the 1,024-token cap. Shorter answers finish more often with a usable final answer. Completions were not kept, so this run cannot separate the two. A follow-up should save the end checkpoint and score start vs end with a 2,048-token budget.
+Completions got about 20% shorter during training (grpo 527 → 436 tokens, gspo 538 → 405, router trainable 541 → 466), and in survey B1 16% of samples hit the 1,024-token cap. So we reran C1 (same seed and settings) and scored the held-out set at steps 0 and 200 a second time, with a 2,048-token limit.
+
+| Held-out pass@1 (199 x 4) | Step 0 | Step 200 | Change (95% CI) | Hit the limit (start → end) | Mean length (start → end) |
+|---|---|---|---|---|---|
+| 1,024-token limit | 37.2% | 54.0% | +16.8 (+12.6 to +21.1) | 8.7% → 4.0% | 544 → 425 |
+| 2,048-token limit | 37.9% | 51.8% | **+13.8 (+9.1 to +18.6)** | 0.75% → 0.13% | 569 → 431 |
+
+- The pre-registered rule was: a gain of at least +10 at 2,048 with the CI above 0 means most of the gain is not explained by the cap. That holds.
+- With twice the room, the start model improves by only 0.7 points, although 8.7% of its answers had been cut off. The cut answers were mostly wrong anyway. At most about 3 of the ~17 points come from the cap.
+- Not ruled out: part of the gain may be the model stating its final answer in a form the checker accepts (format) rather than solving more problems. The completions were not kept. The trained attention weights from C4 are saved on the Modal Volume (`/vol/ckpt/c4_grpo_attention_bf16.pt`, 537 MB, sha256 `102b417c…`), so this can be checked without retraining.
+- C4 also repeats C1 under GPU non-determinism: +16.8 vs +15.0 at 1,024 tokens, with the same seed. This is not an independent seed.
+
+## Caveats
 - **The held-out problems come from the same distribution** (MATH train, pre-selected as "sometimes solved" by the start model). This is not a benchmark score; MATH-500 and other G9 benchmarks were not run.
 - One seed per run. Attention-only training. OLMoE, not Team 5's model (which arrives 18 Nov).
 - KL to start was close to the limit at step 200 for grpo and gspo (0.082, 0.093). Longer runs would need a KL penalty or a lower learning rate.
 
-**Cost:** pilots $1.47, the two crashed first attempts $3.40, C1 $3.66, C2 $3.95, C3 $4.07 (Modal list rates, from our run ledger).
+**Cost:** pilots $1.47, the two crashed first attempts $3.40, C1 $3.66, C2 $3.95, C3 $4.07, C4 $4.28 (Modal list rates, from our run ledger). All phases together: $24.19.

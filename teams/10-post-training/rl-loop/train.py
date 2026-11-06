@@ -165,6 +165,21 @@ def evaluate(sampler, task, prompts, k: int, max_new: int, temperature: float, g
     return per_problem, rolls
 
 
+def length_stats(rolls, max_new: int, eos_id) -> dict:
+    """Share of completions that hit the token cap without ending (a cut answer scores 0), and mean length."""
+    n = cut = toks = 0
+    for r in rolls:
+        lens = r.cmask.sum(1)
+        last = r.seq[torch.arange(r.seq.shape[0]), r.seq.shape[1] - r.cmask.shape[1] + lens.clamp_min(1) - 1]
+        hit = lens == max_new
+        if eos_id is not None:
+            hit = hit & (last != eos_id)
+        cut += int(hit.sum())
+        toks += int(lens.sum())
+        n += lens.numel()
+    return {"truncated": round(cut / max(n, 1), 4), "mean_tokens": round(toks / max(n, 1), 1)}
+
+
 def gpu_memory() -> dict:
     if not torch.cuda.is_available():
         return {}
@@ -348,13 +363,23 @@ def train(cfg: dict) -> dict:
     heldout_curve, heldout_scores, routing_curve = [], {}, []
     probe: dict = {}
     eval_k = int(t.get("eval_k", 4))
+    extra_max_new = int(t["extra_eval_max_new"]) if t.get("extra_eval_max_new") else None
+    gen_extra = torch.Generator(device="cpu").manual_seed(seed + 1)  # own stream: training stays as without it
+    extra_evals: dict = {}
+
+    def extra_eval(step):
+        scores, rolls = evaluate(sampler, task, task.heldout, eval_k, extra_max_new, temperature, gen_extra)
+        extra_evals[step] = {"pass": sum(scores) / len(scores), "scores": scores,
+                             **length_stats(rolls, extra_max_new, policy.eos_id)}
+        print(json.dumps({"extra_eval_step": step, "max_new": extra_max_new,
+                          **{k_: v for k_, v in extra_evals[step].items() if k_ != "scores"}}), flush=True)
 
     def log_heldout(step):
         scores, rolls = evaluate(sampler, task, task.heldout, eval_k, max_new, temperature, gen)
         r = sum(scores) / len(scores)
         heldout_curve.append((step, r))
         heldout_scores[step] = scores
-        extra = {}
+        extra = dict(length_stats(rolls, max_new, policy.eos_id))
         if t.get("kl_to_start"):
             extra["kl_to_start"] = float(f"{kl_to_start(policy, start_w, rolls, task.heldout):.4g}")
         if log_routing:
@@ -387,6 +412,8 @@ def train(cfg: dict) -> dict:
     h0, extra0 = log_heldout(0)
     if cfg.get("verbose", True):
         print(json.dumps({"step": 0, "heldout_reward": h0, **extra0}), flush=True)
+    if extra_max_new:
+        extra_eval(0)
     for step in range(1, int(t["steps"]) + 1):
         times = {}
         random.shuffle(order)
@@ -477,6 +504,16 @@ def train(cfg: dict) -> dict:
         if cfg.get("verbose", True):
             print(json.dumps(rec), flush=True)
     metrics_f.close()
+    if extra_max_new:
+        extra_eval(int(t["steps"]))
+    saved_weights = None
+    if t.get("save_trainable"):
+        import hashlib  # noqa: PLC0415
+        path = Path(t["save_trainable"])
+        path.parent.mkdir(parents=True, exist_ok=True)
+        torch.save({n: p_.detach().to(torch.bfloat16).cpu() for n, p_ in trainable_named}, path)
+        saved_weights = {"path": str(path), "bytes": path.stat().st_size,
+                         "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     checksum_after = router.router_checksum(model)
     recs = [json.loads(line) for line in (out / "metrics.jsonl").read_text().splitlines()]
@@ -508,6 +545,13 @@ def train(cfg: dict) -> dict:
         ks = [r["mismatch_k3"] for r in recs if "mismatch_k3" in r]
         summary["mean_mismatch_k3"] = round(sum(ks) / len(ks), 6)
     summary["router_trainable"] = router_trainable
+    summary["saved_trainable_weights"] = saved_weights
+    if extra_max_new:
+        e0, e1 = extra_evals[0], extra_evals[int(t["steps"])]
+        summary["extra_eval"] = {"max_new": extra_max_new,
+                                 "start": {k_: v for k_, v in e0.items() if k_ != "scores"},
+                                 "end": {k_: v for k_, v in e1.items() if k_ != "scores"},
+                                 "change": heldout.paired_bootstrap(e0["scores"], e1["scores"], seed=seed)}
     (out / "summary.json").write_text(json.dumps(summary, indent=1))
     if not summary["router_unchanged"] and not router_trainable:
         raise RuntimeError("router checksum changed during RL")
