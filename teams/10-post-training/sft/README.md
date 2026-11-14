@@ -89,24 +89,33 @@ Workstream "SFT data v1" (1 to 21 Nov, plan sheet). The SFT mix is one of the it
 ## What has been measured (from the committed reports)
 
 - **Decontamination** against Team 9 fingerprints v2, full set (`set_sha256` 2826a3b8...): 34 sets, 18,376,709 rows in, 464,365 removed (2.53%), 17,912,344 kept, 0 canaries. See `decontam_report.md`.
-- **OCR-2, all 70 Python shards** (`results/ocr2_coverage.md`, `../docs/eligibility_ledger.md`): raw 1,398,166 rows; 786,190 excluded by policy; 69,690 held; 542,286 joined; 67 rejected by the converter; 542,219 scanned; 115,067 removed; 427,152 kept; **admitted 0**.
+- **OCR-2, all 70 Python shards** (`results/ocr2_coverage.md`, `../docs/eligibility_ledger.md`): raw 1,398,166 rows; 786,190 excluded by policy; 69,690 held; 542,286 joined; 67 rejected by the converter; 542,219 scanned; 115,067 removed; 427,152 kept; **admitted 0** (10 Nov diagnostic, v0.1 tokenizer; the v1 pack under C3 is in `results/ocr2_pack_v1.md`).
 - **Kept OCR-2 rows, token lengths** (ledger): p50 5,007, max 29,851; 2,714,970,210 sequence tokens in total.
 - **Conversion test:** 1,000 rows each on four sets (`convert_report.md`). No data file is committed.
 
 ## What has not been done
 
-- **No SFT run.** No model has been fine-tuned on these rows. No pack is admitted. The ledger counts 34 scanned entries and 0 approved complete training packs.
+- **No SFT run.** No model has been fine-tuned on these rows. The OCR-2 pack v1 is built (`results/ocr2_pack_v1.md`) but not yet reviewed or stored by TSAI. The ledger, written before it, counts 34 scanned entries and 0 approved complete training packs.
 - **Token records exist for OCR-2 only.** 32 other scanned sets have row counts and no token record (ledger, section 6, item 4).
 - **Overlap between OCR-2, OpenCodeReasoning and codeforces-cots** is not measured.
 - **Safety share.** The table in the proposal says 3% Safety, but the revision notes say to use 0% Safety until TSAI names an allowed safety set with chat rows.
 - **The tests in this folder were not run for this README.** The only run record is whatever the reports above quote.
 
-## Blockers
+## Status of the former blockers (14 Nov 2026)
 
-- **max_sequence_tokens is not set.** The OCR-2 manifest has `max_sequence_tokens` null, so the admission check reports `context_limit_not_set` (Gate 2). `max_sequence_tokens_proposal.md` proposes 32768 and waits for TSAI's signature.
-- **Source identity is not verified** for `apps/train`, `code_contests/train` and `taco/train` (`source_identity_not_verified:*`), and those sources are not approved for training. The pack report also lists `set_not_allowed_in_licence_table`, `set_not_allowed_in_policy`, `join_not_in_admission_mode` and `tokenizer_not_approved`.
-- **The tokenizer is not in the repo as of 12 Nov.** Gate 2 references sha 15468e66...; `teams/03-tokenizer/` has build scripts and `SHA256SUMS` but no `tokenizer.json` for it. The OCR-2 pack check lists `tokenizer_not_approved`, and `../docs/eligibility_ledger.md` notes that token counts taken before the frozen tokenizer arrives would need a rerun.
-- **Codeforces pool: 69,690 `open-r1/codeforces` train rows are held** until the producer revision is settled.
+TSAI decided the OCR-2 pack on 14 Nov (G10 group): C3 frozen (eos 130822), `max_sequence_tokens` 32768 provisional for SFT
+data v1, the 69,690 Codeforces rows held out of v1, the source repo and revision recorded for TACO, APPS and code_contests,
+and rows without a clear source left out. The pack v1 is built under that ruling: `results/ocr2_pack_v1.md` and
+`results/ocr2_pack_v1_manifest.json` (418,496 training rows, 8,507 held-out rows, 0 blockers in training mode).
+
+- **Context limit:** 32768 is set in `manifests/ocr2_source_manifest_v1.json`. No row exceeds it (longest 29,829 C3 tokens).
+- **Source identity:** taco/apps/code_contests train are `pinned_revision` (repo and revision recorded, every file sha256 equal
+  to the Hub object). They are not relabelled `verified`; `diagnostic` still never admits a row.
+- **Tokenizer:** the C3 sha256 is approved in `ocr2_policy.json`; the file itself is still not in the repo.
+- **Codeforces:** the 69,690 rows stay held under the ruling. 0 are eligible in the pack.
+- **Still open:** the quality threshold (the #391 rule, which the policy calls a proposal); the human spot check of the 14
+  unclear-source TACO problems; and whether the 2% `heldout_eval_v1` split stays, which is a G10 proposal. Both of the last
+  two change the pack hashes if changed. Bytes are stored by TSAI through `../jobs/2026-11-16-ocr2-pack-v1.md`, which is not sent.
 
 ## Reports
 
