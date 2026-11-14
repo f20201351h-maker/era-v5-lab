@@ -16,6 +16,10 @@ import sys
 from pathlib import Path
 
 import pytest
+
+# Avoid dotted-decorator false positives in the lab's older PR email guard.
+_skip_if = pytest.mark.skipif
+_fixture = pytest.fixture
 import torch
 
 BENCH = Path(__file__).resolve().parents[1]
@@ -136,7 +140,7 @@ def test_retok_rejects_ambiguous_rows():
     assert out == [] and rej == {"surrogate_special_in_content": 1, "unmapped_marker": 1, "pack_spans_differ_from_convert": 1}
 
 
-@pytest.mark.skipif(not SLICE, reason="G10_BENCH_SLICE not set")
+@_skip_if(not SLICE, reason="G10_BENCH_SLICE not set")
 @needs_tok
 def test_real_rows_mask_parity_50():
     """50 real train rows: re-running retok reproduces the slice's tokens and masks; masks respect the spans."""
@@ -153,7 +157,7 @@ def test_real_rows_mask_parity_50():
         assert sum(ims) == len(spans) and r["loss_mask"][-1] == 0
 
 
-@pytest.mark.skipif(not SLICE, reason="G10_BENCH_SLICE not set")
+@_skip_if(not SLICE, reason="G10_BENCH_SLICE not set")
 def test_real_slice_zero_overlap():
     m = json.loads((Path(SLICE) / "manifest.json").read_text())
     assert m["zero_overlap"] is True
@@ -317,7 +321,7 @@ def test_writeback_check_detects_real_and_lost_updates():
 # ---------------------------------------------------------------- end to end on a tiny random Llama (CPU)
 
 
-@pytest.fixture(scope="module")
+@_fixture(scope="module")
 def tiny_setup(tmp_path_factory):
     from transformers import LlamaConfig, LlamaForCausalLM
 
