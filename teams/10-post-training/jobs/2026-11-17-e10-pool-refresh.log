@@ -1,0 +1,17 @@
+# Test log: recipe_job.py --config <cfg_e10 with local paths, device cpu, dry_run: true>, Mac M1 Pro CPU, 16 Nov 2026
+2026-11-16 20:03:17 E10 fixed train to step 2
+2026-11-16 20:04:01 E10 fixed train to step 4
+2026-11-16 20:04:44 E10 fixed heldout [[0, 0.0], [2, 0.0], [4, 0.0]] pool []
+2026-11-16 20:04:44 E10 refresh train to step 2
+2026-11-16 20:05:26 E10 refresh train to step 4
+2026-11-16 20:06:09 E10 refresh heldout [[0, 0.0], [2, 0.0], [4, 0.0]] pool []
+2026-11-16 20:06:09 E10 end rc={'fixed': 0, 'refresh': 0}
+--- tail of the last trainer / screen logs ---
+2026-11-16 20:03:17 E10 fixed train to step 2
+W1116 20:03:46.817000 25190 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+2026-11-16 20:04:01 E10 fixed train to step 4
+2026-11-16 20:04:44 E10 fixed heldout [[0, 0.0], [2, 0.0], [4, 0.0]] pool []
+2026-11-16 20:04:44 E10 refresh train to step 2
+2026-11-16 20:05:26 E10 refresh train to step 4
+2026-11-16 20:06:09 E10 refresh heldout [[0, 0.0], [2, 0.0], [4, 0.0]] pool []
+2026-11-16 20:06:09 E10 end rc={'fixed': 0, 'refresh': 0}

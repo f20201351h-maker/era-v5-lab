@@ -1,0 +1,22 @@
+# E9 at SmolLM2-1.7B base on one GPU (TSAI job request / any CUDA machine): three SFT arms, full fine-tune, then the RL
+# screen. Prereg: work/recipe-e9-2026-11-16/PREREG_E9.md (+ amendments). Inputs are staged under inputs/ (no network).
+cmd: e9
+model: inputs/SmolLM2-1.7B-effd688a          # HuggingFaceTB/SmolLM2-1.7B @ effd688a12921b4cc83e3312b6feb579f70f9c71
+data: inputs/g10-e9                          # dolly.tok.jsonl, ocr2_clean.tok.jsonl (prep_data.py)
+tasks: inputs/g10-e9/cc.jsonl                # RL data v1 code records (sha256 91ee9951...)
+rung: inputs/g10-e9/rung1_s128_ids.txt
+rest: inputs/g10-e9/rest_s32_ids.txt
+arms: A2,A0                                  # the two arms that decide the gate (Dolly-only is answered at 135M/360M)
+steps: 150
+batch_target_tokens: 8000
+lr: 0.0001
+autocast: bf16                               # FP32 weights / grads / AdamW, bf16 compute (CUDA >= sm80)
+grad_ckpt: true
+micro_tokens: 8192
+k: 8
+max_new: 1024
+gen_batch: 64
+device: cuda
+workers: 4
+stdio_runner: docker                         # or local (Linux, root); the expected outputs never reach the program
+out: out/e9

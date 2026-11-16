@@ -69,6 +69,7 @@ import heldout  # noqa: E402
 import rollout  # noqa: E402
 import router  # noqa: E402
 import routing  # noqa: E402
+import prompt_pool  # noqa: E402
 import tasks  # noqa: E402
 from policy import HFPolicy, completion_logprobs, hf_policy, module_policy, use_fp32_master  # noqa: E402
 
@@ -269,6 +270,8 @@ def state_identity(cfg: dict, trainable_named) -> dict:
         keys += ("autocast",)
     if t.get("dt"):  # only present for Deletion Tuning runs, so states saved before train.dt existed stay valid
         keys += ("dt",)
+    if t.get("pool"):  # only present for pool-sampler runs (prompt_pool.py), same reason
+        keys += ("pool",)
     names = "\n".join(f"{n}:{tuple(p_.shape)}" for n, p_ in trainable_named)
     return {"version": STATE_VERSION, "seed": int(cfg.get("seed", 1234)),
             "model": {k_: cfg["model"].get(k_) for k_ in ("kind", "path", "dtype", "config")},
@@ -371,6 +374,24 @@ def score_completions(task, pairs: list[tuple[list[int], list[int]]], workers: i
     from concurrent.futures import ThreadPoolExecutor  # noqa: PLC0415
     with ThreadPoolExecutor(workers) as ex:
         return list(ex.map(lambda pc: task.reward(*pc), pairs))
+
+
+def make_prompt_pool(t: dict, pool_list: list, task, screen, seed: int, saved: dict | None):
+    """train.pool (prompt_pool.py). With a screen, the starting cohort is the screened mixed prompts and only prompts
+    the screen did not look at may enter later; without one, it is the first cohort_size of the pool's seeded shuffle.
+    In refresh mode the train-cohort evaluation (cohort_eval_k) keeps measuring the STARTING cohort, the same prompts a
+    fixed-cohort arm trains on."""
+    initial = fresh = None
+    if screen:
+        pos = {tuple(p): i for i, p in enumerate(pool_list)}
+        initial = [pos[tuple(p)] for p in task.train]
+        fresh = list(range(int(screen.get("n", 64)), len(pool_list)))
+    pp_ = prompt_pool.from_config(dict(t["pool"]), len(pool_list), int(t["prompts_per_step"]), seed + 7, initial, fresh)
+    if saved is not None:
+        pp_.load_state_dict(saved)
+    if pp_.mode == "refresh":
+        task.train = [pool_list[i] for i in pp_.initial]
+    return pp_
 
 
 def set_trainable(model, patterns: list[str] | None) -> int:
@@ -791,6 +812,7 @@ def train(cfg: dict) -> dict:
     gen_device = device if sampler_kind == "policy" and not isinstance(policy, HFPolicy) else "cpu"
     gen = torch.Generator(device=gen_device).manual_seed(seed)
     order = list(range(len(task.train)))
+    ppool = None  # train.pool: prompt_pool.PromptPool; None = the fixed-cohort path, unchanged
     fixture_smoke = adapter is not None and adapter.status != "READY"
     metrics_path = out / ("smoke_metrics.jsonl" if fixture_smoke else "metrics.jsonl")
     if fixture_smoke:
@@ -800,7 +822,7 @@ def train(cfg: dict) -> dict:
     gen_extra = torch.Generator(device=gen_device).manual_seed(seed + 1)  # own stream: training stays as without it
     gens = {"gen": gen, "gen_extra": gen_extra, "gen_cohort": gen_cohort}
     evals_path = out / "evals.jsonl"
-    resumed, start_step, prior_s, cohort_ids = None, 0, 0.0, None
+    resumed, start_step, prior_s, cohort_ids, pool_state = None, 0, 0.0, None, None
     identity = state_identity(cfg, trainable_named) if state_dir is not None else None
     if state_dir is not None:
         resumed = load_state(state_dir, identity)
@@ -815,6 +837,7 @@ def train(cfg: dict) -> dict:
             g_.set_state(resumed["gens"][name_])
         order, start_step, prior_s = list(resumed["order"]), int(resumed["step"]), float(resumed["elapsed_s"])
         cohort_ids = resumed["cohort_ids"]
+        pool_state = resumed.get("pool")
         if dt_cfg:
             for _, m_ in dtmask.masked_layers(model):
                 m_.current_step = int(resumed["dt_steps"])
@@ -843,6 +866,7 @@ def train(cfg: dict) -> dict:
 
     def write_state(step):
         payload = {"identity": identity, "step": step, "order": list(order), "cohort_ids": cohort_ids,
+                   **({"pool": ppool.state_dict()} if ppool is not None else {}),
                    "elapsed_s": prior_s + time.time() - start,
                    "trainable": {n_: p_.detach().to("cpu", copy=True) for n_, p_ in trainable_named},
                    "dt_steps": dtmask.masked_layers(model)[0][1].current_step if dt_cfg else None,
@@ -916,6 +940,7 @@ def train(cfg: dict) -> dict:
         if sync_check.get("ok") is False:
             raise RuntimeError(f"vLLM weight sync does not work: {sync_check}")
     screen = t.get("screen")  # mixed-band selection on TRAIN prompts only; the held-out set is never filtered
+    pool_list = list(task.train)  # train.pool draws from these (indices are stable: the list comes from the config)
     if resumed is not None and cohort_ids is not None:  # the cohort screened before the restart, in its saved order
         by_env = {env: list(key) for key, env in task._items.items()}
         task.train = [by_env[i] for i in cohort_ids]
@@ -959,6 +984,8 @@ def train(cfg: dict) -> dict:
         task.train = mixed
         order = list(range(len(task.train)))
         cohort_ids = [i for i, c in zip(ids, passes) if 0 < c < k_s]
+    if t.get("pool"):
+        ppool = make_prompt_pool(t, pool_list, task, screen, seed, pool_state)
     if state_dir is not None and resumed is None:
         write_state(0)  # a kill during the first evaluation must not repeat the screen
     if 0 in heldout_scores:
@@ -989,8 +1016,12 @@ def train(cfg: dict) -> dict:
             break
         steps_done = step
         times = {}
-        random.shuffle(order)
-        batch = [task.train[i] for i in order[: int(t["prompts_per_step"])]]
+        if ppool is None:  # fixed cohort (unchanged)
+            random.shuffle(order)
+            batch = [task.train[i] for i in order[: int(t["prompts_per_step"])]]
+        else:
+            drawn = ppool.draw()
+            batch = [pool_list[i] for i in drawn]
         c0 = time.time()
         rolls = sampler.sample(batch, k, max_new, temperature, gen)
         times["rollout"] = time.time() - c0
@@ -1002,6 +1033,7 @@ def train(cfg: dict) -> dict:
         # observer token counts: one host sync per step (cmask lives on the sampler device), not one per group
         group_tokens = torch.stack([r.cmask.sum() for r in rolls]).tolist() if sub_fn is not None else None
         kinds = {"all_one": 0, "all_zero": 0, "tied_other": 0, "singleton": 0, "mixed": 0}
+        pool_kinds: list[str] = []
         if reward_workers > 1:
             flat = score_completions(task, [(p, row[m].tolist()) for p, r in zip(batch, rolls)
                                             for row, m in zip(r.seq[:, len(p):], r.cmask)], reward_workers)
@@ -1011,6 +1043,8 @@ def train(cfg: dict) -> dict:
             else:
                 rewards = torch.tensor([task.reward(p, row[m].tolist()) for row, m in zip(r.seq[:, len(p):], r.cmask)])
             rewards_all += rewards.tolist()
+            if ppool is not None:
+                pool_kinds.append(prompt_pool.group_kind(rewards.tolist()))
             scored.append((p, r, grpo.advantages(rewards, algo)))
             if sub_fn is not None:  # input mixture vs what survives group dropping, per subgroup
                 sg = subgroups.setdefault(sub_fn(p), {"groups": 0, "kept": 0, "tokens": 0, "kept_tokens": 0,
@@ -1168,6 +1202,8 @@ def train(cfg: dict) -> dict:
                "seconds": round(prior_s + time.time() - start, 1)}
         if step_reasons is not None:
             rec["reasons"] = step_reasons
+        if ppool is not None:  # after the update, before the state is written: the refresh is part of this step
+            rec["pool"] = ppool.observe(step, drawn, pool_kinds)
         if subgroups:
             rec["subgroups"] = dict(sorted(subgroups.items()))
         last_step_s = rec["step_s"]
@@ -1269,6 +1305,8 @@ def train(cfg: dict) -> dict:
                                 "group_kinds_total": {k_: sum(r["group_kinds"][k_] for r in recs)
                                                       for k_ in recs[0]["group_kinds"]} if recs else {}}
     summary["saved_trainable_weights"] = saved_weights
+    if ppool is not None:
+        summary["prompt_pool"] = ppool.summary()
     if dt_cfg:
         summary["deletion_tuning"] = {**dt_info, "deletion_final": dtmask.deletion_stats(model),
                                       "alpha_final": dt_layer0.alpha, "optimizer_steps": dt_layer0.current_step}

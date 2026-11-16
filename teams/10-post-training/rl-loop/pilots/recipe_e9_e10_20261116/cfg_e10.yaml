@@ -1,0 +1,32 @@
+# E10 (run only if E9 passes the 10% mixed-group gate): fixed cohort vs pool refresh on the E9 A2 model, one GPU.
+# Prereg: work/recipe-e9-2026-11-16/PREREG_E10.md.
+cmd: e10
+sft_model: inputs/e9-A2-model                # the E9 A2 arm's model/ folder at the gated size
+tasks: inputs/g10-e9/cc.jsonl
+train_ids: inputs/g10-e9/e10_train_ids.txt
+heldout_ids: inputs/g10-e9/e10_heldout_ids.txt
+arms: fixed,refresh
+steps: 40
+prompts_per_step: 16
+k: 8
+max_new: 1024
+lr: 0.00001
+eval_every: 10
+eval_k: 4
+screen_n: 192
+min_mixed: 16
+cohort_size: 16
+refresh_below: 0.5
+baseline_steps: 3
+window: 3
+trainable: '\.self_attn\.'
+checkpoints: 10,20,40
+screen_k: 8
+screen_max_new: 1024
+gen_batch: 64
+micro_rows: 4
+sampler: hf_batch
+device: cuda
+workers: 4
+stdio_runner: docker
+out: out/e10
