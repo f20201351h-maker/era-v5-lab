@@ -1,16 +1,9 @@
-# Test log: recipe_job.py --config <cfg_e9 with local paths, device cpu, dry_run: true>, Mac M1 Pro CPU, 16 Nov 2026
-2026-11-16 12:34:37 E9 start model=~/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 arms=['A2', 'A0'] gpus=[None] device=cpu
-2026-11-16 12:34:37 E9 A2 train start
-2026-11-16 12:36:37 E9 A2 screen start
-2026-11-16 12:37:20 E9 A2 done
-2026-11-16 12:37:20 E9 A0 screen start
-2026-11-16 12:38:31 E9 A0 done
-2026-11-16 12:38:31 E9 end {"A2": {"rest": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}, "rung1": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}}, "A0": {"rest": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}, "rung1": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}}}
---- tail of the last trainer / screen logs ---
-2026-11-16 12:34:37 E9 start model=~/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 arms=['A2', 'A0'] gpus=[None] device=cpu
-2026-11-16 12:34:37 E9 A2 train start
-2026-11-16 12:36:37 E9 A2 screen start
-2026-11-16 12:37:20 E9 A2 done
-2026-11-16 12:37:20 E9 A0 screen start
-2026-11-16 12:38:31 E9 A0 done
-2026-11-16 12:38:31 E9 end {"A2": {"rest": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}, "rung1": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}}, "A0": {"rest": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}, "rung1": {"ladder": {"closed": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}}}
+# Test log: recipe_job.py --config <cfg_e9_17b shape with local paths, device cpu, dry_run: true, arms A2v2,A4>, Mac M1 Pro CPU, 17 Nov 2026, 69 s, exit 0
+2026-11-17 14:20:39 E9 start model=~/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/93efa2f097d58c2a74874c7e644dbc9b0cee75a2 arms=['A2v2', 'A4'] gpus=[None] device=cpu
+2026-11-17 14:20:39 E9 A2v2 train start
+2026-11-17 14:21:05 E9 A2v2 screen start
+2026-11-17 14:21:18 E9 A2v2 done
+2026-11-17 14:21:18 E9 A4 train start
+2026-11-17 14:21:37 E9 A4 screen start
+2026-11-17 14:21:48 E9 A4 done
+2026-11-17 14:21:48 E9 end {"A2v2": {"rest": {"ladder": {"closed": 0.0, "closed_content": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}, "rung1": {"ladder": {"closed": 0.0, "closed_content": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}}, "A4": {"rest": {"ladder": {"closed": 0.0, "closed_content": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}, "rung1": {"ladder": {"closed": 0.0, "closed_content": 0.0, "valid_format": 0.0, "code_block": 0.0, "parses": 0.0, "runs": 0.0, "pass_kept": 0.0}, "mixed": 0.0}}}

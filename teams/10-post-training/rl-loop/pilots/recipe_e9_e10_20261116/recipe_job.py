@@ -109,7 +109,7 @@ def e9_arm(a, arm: str, base: Path, out: Path, gpu: str | None) -> dict:
             cmd += ["--limit", str(a.limit)]
         if a.static_cache:
             cmd.append("--static-cache")
-        cmd += ["--dtype", a.screen_dtype]
+        cmd += ["--dtype", a.screen_dtype, "--kv-cache-gb", str(a.kv_cache_gb)]
         log(f"E9 {arm} screen start", out)
         if run(cmd, rd / "screen.log", env):
             return {**res, "error": "screen failed (see screen.log)"}
@@ -348,6 +348,7 @@ def main(argv=None) -> int:
     e.add_argument("--lora-r", type=int, default=4)
     e.add_argument("--marker-lr", type=float, default=1e-4)
     e.add_argument("--screen-dtype", default="float32", choices=("float32", "bfloat16"))
+    e.add_argument("--kv-cache-gb", type=float, default=3.0, help="rl_screen KV-cache budget per batch (A100: 30)")
     r = sub.add_parser("e10")
     r.add_argument("--sft-model", required=True)
     r.add_argument("--arms", default="fixed,refresh")

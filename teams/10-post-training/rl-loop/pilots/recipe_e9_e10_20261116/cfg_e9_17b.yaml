@@ -6,7 +6,7 @@ data: inputs/g10-e9                          # dolly.tok.jsonl, ocr2_clean.tok.j
 tasks: inputs/g10-e9/cc.jsonl                # RL data v1 code records (sha256 91ee9951...)
 rung: inputs/g10-e9/rung1_s128_ids.txt
 rest: inputs/g10-e9/rest_s32_ids.txt
-arms: A2,A0                                  # the two arms that decide the gate (Dolly-only is answered at 135M/360M)
+arms: A2v2,A4                                # full traces vs short answers, both on the clean v2 rows (E9 amendment 7)
 steps: 150
 batch_target_tokens: 8000
 lr: 0.0001
@@ -14,8 +14,10 @@ autocast: bf16                               # FP32 weights / grads / AdamW, bf1
 grad_ckpt: true
 micro_tokens: 8192
 k: 8
-max_new: 1024
+max_new: 2048                                # 1,024 measured truncation, not ability (E9 amendment 6)
 gen_batch: 64
+screen_dtype: bfloat16                       # sampling dtype on the A100 (fp32 everywhere else)
+kv_cache_gb: 30
 device: cuda
 workers: 4
 stdio_runner: docker                         # or local (Linux, root); the expected outputs never reach the program
