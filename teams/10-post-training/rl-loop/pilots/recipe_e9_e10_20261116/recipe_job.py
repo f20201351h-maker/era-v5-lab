@@ -28,6 +28,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -109,7 +110,7 @@ def e9_arm(a, arm: str, base: Path, out: Path, gpu: str | None) -> dict:
             cmd += ["--limit", str(a.limit)]
         if a.static_cache:
             cmd.append("--static-cache")
-        cmd += ["--dtype", a.screen_dtype, "--kv-cache-gb", str(a.kv_cache_gb)]
+        cmd += ["--dtype", a.screen_dtype, "--kv-cache-gb", str(a.kv_cache_gb), "--decode-loop", a.decode_loop, "--attn", a.attn]
         log(f"E9 {arm} screen start", out)
         if run(cmd, rd / "screen.log", env):
             return {**res, "error": "screen failed (see screen.log)"}
@@ -139,23 +140,34 @@ def e9(a) -> int:
     for g in gpus:
         free.put(g)
 
+    done_arms: list[dict] = []
+    lock = threading.Lock()
+
+    def write_summary(results: list[dict], final: bool) -> None:
+        for r in results:
+            p = Path(r.get("screen_report", ""))
+            if p.is_file():
+                rep = json.loads(p.read_text())
+                r["brief"] = {s: {"ladder": {k: v["share"] for k, v in d["ladder"].items()},
+                                  "mixed": d.get("groups_pass_kept", {}).get("mixed_share")} for s, d in rep["sets"].items()}
+        (out / "e9_summary.json").write_text(json.dumps(
+            {"arms": results, "arms_requested": arms, "complete": final, "seconds": round(time.time() - t0, 1),
+             "dry_run": a.dry_run}, indent=1))
+
     def on_free_gpu(arm):  # an arm takes whichever GPU is free and gives it back: never two arms on one GPU
         g = free.get()
         try:
-            return e9_arm(a, arm, base, out, g)
+            res = e9_arm(a, arm, base, out, g)
         finally:
             free.put(g)
+        with lock:  # a partial e9_summary.json after every arm, so a job killed at its time limit still reports the arms it finished
+            done_arms.append(res)
+            write_summary(list(done_arms), final=False)
+        return res
     with ThreadPoolExecutor(len(gpus)) as ex:
         jobs = [ex.submit(on_free_gpu, arm) for arm in arms]
         results = [j.result() for j in jobs]
-    summary = {"arms": results, "seconds": round(time.time() - t0, 1), "dry_run": a.dry_run}
-    for r in results:
-        p = Path(r.get("screen_report", ""))
-        if p.is_file():
-            rep = json.loads(p.read_text())
-            r["brief"] = {s: {"ladder": {k: v["share"] for k, v in d["ladder"].items()},
-                              "mixed": d.get("groups_pass_kept", {}).get("mixed_share")} for s, d in rep["sets"].items()}
-    (out / "e9_summary.json").write_text(json.dumps(summary, indent=1))
+    write_summary(results, final=True)
     log(f"E9 end {json.dumps({r['arm']: r.get('brief', r.get('error')) for r in results})}", out)
     return 0 if all("error" not in r for r in results) else 1
 
@@ -342,6 +354,10 @@ def main(argv=None) -> int:
     e.add_argument("--max-new", type=int, default=1024)
     e.add_argument("--gen-batch", type=int, default=64)
     e.add_argument("--static-cache", action="store_true")
+    e.add_argument("--decode-loop", choices=("hf", "custom"), default="custom",
+                   help="custom: finished rows are dropped, sampled ids equal HF generate's (tests + 17 Nov T4 runs)")
+    e.add_argument("--attn", choices=("sdpa", "gqa_decode"), default="sdpa",
+                   help="gqa_decode: grouped one-token attention, 3x on GQA models like SmolLM2-360M; no gain on MHA (1.7B)")
     e.add_argument("--no-forget", dest="forget", action="store_false")
     e.add_argument("--gpus", default="")
     e.add_argument("--method", default="full", choices=("full", "lora"))

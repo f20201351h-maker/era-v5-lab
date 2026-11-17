@@ -271,10 +271,104 @@ def strict_rescore(records: list[dict], tasks: dict[str, dict], hidden: dict[str
 # ---------------------------------------------------------------- generation
 
 
+def register_gqa_decode_attention(name: str = "gqa_decode") -> str:
+    """One-token decode attention for grouped-query models without the stock SDPA path's copies. For q_len == 1 the stock
+    path (math kernel with a mask) repeats K and V by the group size, scales a full copy of K and then multiplies, so a
+    decode step costs about 7 ms per row at a 1,500-token context on a T4 whatever the dtype (17 Nov profile in
+    work/recipe-e9-2026-11-16/PREREG_SPEED.md). Here the query heads of one KV head are batched as rows of one matmul
+    (B x Hkv batches of [G, D] x [D, C]), so K and V are read once. Prefill (q_len > 1) uses the stock SDPA function.
+    Select it with `from_pretrained(..., attn_implementation=name)`; same math, different reduction order."""
+    import torch  # noqa: PLC0415
+    from transformers import AttentionInterface  # noqa: PLC0415
+    from transformers.integrations.sdpa_attention import sdpa_attention_forward  # noqa: PLC0415
+    from transformers.masking_utils import AttentionMaskInterface, sdpa_mask  # noqa: PLC0415
+
+    def gqa_decode_attention(module, query, key, value, attention_mask, dropout=0.0, scaling=None, is_causal=None, **kw):
+        if query.shape[2] != 1:
+            return sdpa_attention_forward(module, query, key, value, attention_mask, dropout=dropout, scaling=scaling,
+                                          is_causal=is_causal, **kw)
+        b, h, _, d = query.shape
+        kv_heads = key.shape[1]
+        scale = scaling if scaling is not None else d ** -0.5
+        scores = torch.matmul(query.reshape(b, kv_heads, h // kv_heads, d), key.transpose(-1, -2)) * scale  # [B, Hkv, G, C]
+        if attention_mask is not None:  # [B, 1, 1, C]: bool (True = attend) or additive float
+            m = attention_mask[:, :, -1:, : key.shape[-2]]
+            scores = scores.masked_fill(~m, float("-inf")) if m.dtype == torch.bool else scores + m
+        probs = torch.softmax(scores, dim=-1, dtype=torch.float32).to(value.dtype)
+        return torch.matmul(probs, value).reshape(b, 1, h, d), None  # head h = kv * G + g, as repeat_kv orders them
+
+    AttentionInterface.register(name, gqa_decode_attention)
+    AttentionMaskInterface.register(name, sdpa_mask)
+    return name
+
+
+def decode_loop(model, ids, attn, k: int, max_new: int, temperature: float, stop_ids, pad_id: int,
+                greedy: bool = False, drop_finished: bool = True, compact_every: int = 16,
+                exact_rng: bool = True) -> tuple[list[list[int]], int]:
+    """Batched sampling with a DynamicCache that drops rows once they hit a stop token (HF `generate` keeps them decoding
+    until the whole batch is done). Same row order as `generate(num_return_sequences=k)`: row j*k+s is sample s of prompt j.
+    Returns (generated ids per row, padded after the stop token; decoded row-steps). Compaction runs every `compact_every`
+    steps and is also the only host sync besides the final copy (rows that finished in between keep decoding until then,
+    their tokens are replaced by pad). greedy=True is argmax (the correctness test); otherwise softmax(logits/T) sampling,
+    drawn over all n rows (exact_rng) so that the sampled ids equal HF generate's for the same seed."""
+    import torch  # noqa: PLC0415
+    from transformers import DynamicCache  # noqa: PLC0415
+    dev = ids.device
+    ids, attn = ids.repeat_interleave(k, 0), attn.repeat_interleave(k, 0)
+    n = ids.shape[0]
+    pos = (attn.cumsum(-1) - 1).clamp_min(0)  # the position ids HF derives from a left-padded mask
+    stop = torch.tensor(list(stop_ids), device=dev)
+    out = model(input_ids=ids, attention_mask=attn, position_ids=pos, past_key_values=DynamicCache(config=model.config),
+                use_cache=True, logits_to_keep=1)  # logits of the last prompt position only (HF generate does the same)
+    cache, logits = out.past_key_values, out.logits[:, -1, :]
+    nxt_pos = pos[:, -1:] + 1
+    rows = torch.arange(n, device=dev)
+    gen = torch.full((n, max_new), pad_id, dtype=torch.long, device=dev)
+    finished = torch.zeros(n, dtype=torch.bool, device=dev)
+    pad = torch.full((n,), pad_id, dtype=torch.long, device=dev)
+    row_steps = 0
+    for t in range(max_new):
+        if greedy:
+            nxt = logits.argmax(-1)
+        else:
+            probs = torch.softmax(logits.float() / temperature, dim=-1)
+            if exact_rng and probs.shape[0] != n:
+                # HF generate draws one multinomial over ALL n rows every step. Draw over n rows here too (dropped rows get a
+                # dummy one-hot distribution) so each live row consumes the same random numbers and the sampled ids equal
+                # generate()'s for the same seed and batch, instead of a different random stream.
+                full = torch.zeros((n, probs.shape[1]), dtype=probs.dtype, device=dev)
+                full[:, 0] = 1.0
+                full[rows] = probs
+                nxt = torch.multinomial(full, 1).squeeze(1)[rows]
+            else:
+                nxt = torch.multinomial(probs, 1).squeeze(1)
+        nxt = torch.where(finished, pad[: nxt.shape[0]], nxt)
+        gen[rows, t] = nxt
+        finished = finished | torch.isin(nxt, stop)
+        row_steps += nxt.shape[0]
+        if t == max_new - 1:
+            break
+        if (t + 1) % compact_every == 0:
+            if bool(finished.all()):
+                break
+            if drop_finished and bool(finished.any()):
+                keep = (~finished).nonzero().squeeze(1)
+                cache.batch_select_indices(keep)
+                attn, rows, nxt_pos, nxt, finished = attn[keep], rows[keep], nxt_pos[keep], nxt[keep], finished[keep]
+        attn = torch.cat([attn, torch.ones_like(attn[:, :1])], dim=1)
+        out = model(input_ids=nxt[:, None], attention_mask=attn, position_ids=nxt_pos, past_key_values=cache, use_cache=True)
+        logits = out.logits[:, -1, :]
+        nxt_pos = nxt_pos + 1
+    return gen.cpu().tolist(), row_steps
+
+
 def generate(model, tok, items: list[tuple[str, dict, list[int]]], k: int, max_new: int, temperature: float,
              seed: int, device: str, seqs_per_batch: int, out_path: Path, done: set, static_cache: bool = False,
-             max_batch_tokens: int = 0, kv_cache_gb: float = 3.0) -> dict:
+             max_batch_tokens: int = 0, kv_cache_gb: float = 3.0, loop: str = "hf", drop_finished: bool = True,
+             greedy: bool = False) -> dict:
     import torch  # noqa: PLC0415
+    if device.startswith("cuda"):
+        torch.cuda.reset_peak_memory_stats()
     todo = [it for it in items if (it[0], it[1]["id"]) not in done]
     todo.sort(key=lambda it: len(it[2]))
     per = max(1, seqs_per_batch // k)
@@ -295,7 +389,7 @@ def generate(model, tok, items: list[tuple[str, dict, list[int]]], k: int, max_n
             n += 1
         chunks.append(todo[b:b + n])
         b += n
-    t0, n_tok = time.time(), 0
+    t0, n_tok, row_steps = time.time(), 0, 0
     with open(out_path, "a", encoding="utf-8") as f:
         for chunk in chunks:
             L = max(len(p) for _, _, p in chunk)
@@ -307,11 +401,19 @@ def generate(model, tok, items: list[tuple[str, dict, list[int]]], k: int, max_n
             # seed per prompt set position: a restart regenerates the same batch from the same seed
             torch.manual_seed(seed * 1_000_003 + int(hashlib.sha256(chunk[0][1]["id"].encode()).hexdigest()[:8], 16))
             with torch.no_grad():
-                out = model.generate(input_ids=ids.to(device), attention_mask=attn.to(device), do_sample=True,
-                                     temperature=temperature, top_k=0, top_p=1.0, max_new_tokens=max_new,
-                                     num_return_sequences=k, eos_token_id=list(STOP_IDS), pad_token_id=retok.EOS_ID,
-                                     **({"cache_implementation": "static"} if static_cache else {}))
-            new = out[:, L:].cpu().tolist()
+                if loop == "custom":
+                    new, _ = decode_loop(model, ids.to(device), attn.to(device), k, max_new, temperature, STOP_IDS,
+                                         retok.EOS_ID, greedy=greedy, drop_finished=drop_finished)
+                else:
+                    # HF greedy search does not accept num_return_sequences > 1: repeat the rows ourselves (same row order)
+                    out = model.generate(input_ids=ids.to(device).repeat_interleave(k if greedy else 1, 0),
+                                         attention_mask=attn.to(device).repeat_interleave(k if greedy else 1, 0),
+                                         do_sample=not greedy,
+                                         **({} if greedy else {"temperature": temperature, "top_k": 0, "top_p": 1.0}),
+                                         max_new_tokens=max_new, num_return_sequences=1 if greedy else k, eos_token_id=list(STOP_IDS),
+                                         pad_token_id=retok.EOS_ID, **({"cache_implementation": "static"} if static_cache else {}))
+                    new = out[:, L:].cpu().tolist()
+            batch_tok = []
             for j, (set_name, task, p) in enumerate(chunk):
                 for s in range(k):
                     g = new[j * k + s]
@@ -319,12 +421,19 @@ def generate(model, tok, items: list[tuple[str, dict, list[int]]], k: int, max_n
                     body = g[: stop + 1] if stop is not None else g
                     rec = make_record(tok, set_name, task, p, body, sample=s)
                     n_tok += rec["gen_tokens"]
+                    batch_tok.append(rec["gen_tokens"])
                     f.write(json.dumps(rec) + "\n")
+            row_steps += len(batch_tok) * max(batch_tok)  # rows x steps HF `generate` runs (the longest row decides)
             f.flush()
     secs = time.time() - t0
-    return {"generated_prompts": len(todo), "batches": len(chunks), "kv_budget_tokens": budget, "gen_seconds": round(secs, 1),
-            "gen_tokens": n_tok,
-            "gen_tokens_per_s": round(n_tok / max(secs, 1e-9), 1)}
+    stats = {"generated_prompts": len(todo), "batches": len(chunks), "kv_budget_tokens": budget, "gen_seconds": round(secs, 1),
+             "gen_tokens": n_tok, "gen_tokens_per_s": round(n_tok / max(secs, 1e-9), 1), "loop": loop,
+             "drop_finished": drop_finished if loop == "custom" else False,
+             "rows_per_batch_mean": round(sum(len(c) for c in chunks) * k / max(len(chunks), 1), 1),
+             "useful_token_share_if_no_drop": round(n_tok / max(row_steps, 1), 3)}
+    if device.startswith("cuda"):
+        stats["peak_gpu_gb"] = round(torch.cuda.max_memory_allocated() / 2**30, 2)
+    return stats
 
 
 def make_record(tok, set_name: str, task: dict, prompt_ids: list[int], body: list[int], sample: int) -> dict:
@@ -396,6 +505,12 @@ def main(argv=None) -> int:
     ap.add_argument("--static-cache", action="store_true", help="fixed-shape KV cache (faster on MPS: fewer kernel shapes)")
     ap.add_argument("--dtype", default="float32", choices=("float32", "bfloat16", "float16"),
                     help="sampling dtype (float32 everywhere here; bfloat16 only on GPUs that have it, and say so)")
+    ap.add_argument("--decode-loop", choices=("hf", "custom"), default="hf",
+                    help="hf = model.generate (finished rows keep decoding); custom = decode_loop (finished rows dropped)")
+    ap.add_argument("--attn", choices=("sdpa", "gqa_decode"), default="sdpa",
+                    help="gqa_decode = grouped one-token decode attention (no K/V repeat); sdpa = the stock path")
+    ap.add_argument("--keep-finished", action="store_true", help="custom loop only: do not drop finished rows (isolates the loop)")
+    ap.add_argument("--greedy", action="store_true", help="argmax decoding (equality tests only, not a screen)")
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--hidden-tests", type=Path, help="private jsonl {id, tests} of unused source tests")
     ap.add_argument("--n-boot", type=int, default=2000)
@@ -439,10 +554,12 @@ def main(argv=None) -> int:
             if gens.exists():
                 for r in read_jsonl(gens):
                     done.add((r["set"], r["task_id"]))
-            model = AutoModelForCausalLM.from_pretrained(a.model, dtype=getattr(torch, a.dtype)).to(a.device).eval()
+            attn_kw = {"attn_implementation": register_gqa_decode_attention()} if a.attn == "gqa_decode" else {}
+            model = AutoModelForCausalLM.from_pretrained(a.model, dtype=getattr(torch, a.dtype), **attn_kw).to(a.device).eval()
             gstats = generate(model, tok, items, a.k, a.max_new, a.temperature, a.seed, a.device, a.seqs_per_batch,
-                              gens, done, a.static_cache, a.max_batch_tokens, a.kv_cache_gb)
-            meta.update({"model": a.model, "max_new": a.max_new, "static_cache": a.static_cache, "temperature": a.temperature, "top_k": 0, "top_p": 1.0,
+                              gens, done, a.static_cache, a.max_batch_tokens, a.kv_cache_gb,
+                              a.decode_loop, not a.keep_finished, a.greedy)
+            meta.update({"model": a.model, "max_new": a.max_new, "static_cache": a.static_cache, "attn": a.attn, "temperature": a.temperature, "top_k": 0, "top_p": 1.0,
                          "seed": a.seed, "device": a.device, "dtype": a.dtype,
                          "model_sha256": hashlib.sha256((Path(a.model) / "model.safetensors").read_bytes()).hexdigest()
                          if (Path(a.model) / "model.safetensors").exists() else None})

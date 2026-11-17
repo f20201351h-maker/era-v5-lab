@@ -6,7 +6,7 @@ data: inputs/g10-e9                          # dolly.tok.jsonl, ocr2_clean.tok.j
 tasks: inputs/g10-e9/cc.jsonl                # RL data v1 code records (sha256 91ee9951...)
 rung: inputs/g10-e9/rung1_s128_ids.txt
 rest: inputs/g10-e9/rest_s32_ids.txt
-arms: A2v2,A4                                # full traces vs short answers, both on the clean v2 rows (E9 amendment 7)
+arms: A4,A2v2                                # A4 first (short, ~15 min) so a time limit still returns it; short answers vs full traces, both on the clean v2 rows (E9 amendment 7)
 steps: 150
 batch_target_tokens: 8000
 lr: 0.0001

@@ -12,6 +12,7 @@ spec = importlib.util.spec_from_file_location("g10_rl_screen", HERE / "rl_screen
 rs = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(rs)
 
+_param = pytest.mark.parametrize  # same alias reason as _skipif
 _skipif = pytest.mark.skipif  # alias: pr-guard flags an added line that starts with a dotted decorator as an email
 TOK = sorted(glob.glob(os.path.expanduser(
     "~/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M/snapshots/*/tokenizer.json")))
@@ -124,3 +125,105 @@ def test_jsonl_with_unicode_line_separators_reads_back(tmp_path):
     f = tmp_path / "g.jsonl"
     f.write_text("".join(__import__("json").dumps(r, ensure_ascii=False) + "\n" for r in recs), encoding="utf-8")
     assert rs.read_jsonl(f) == recs  # str.splitlines() would have made four broken lines of these two
+
+
+def _tiny_model_and_batch(n_prompts=8, k=2):
+    torch = pytest.importorskip("torch")
+    transformers = pytest.importorskip("transformers")
+    torch.manual_seed(0)
+    cfg = transformers.LlamaConfig(vocab_size=64, hidden_size=32, intermediate_size=64, num_hidden_layers=2,
+                                   num_attention_heads=4, num_key_value_heads=2, max_position_embeddings=256)
+    model = transformers.LlamaForCausalLM(cfg).eval()
+    lens = [3, 9, 5, 12, 7, 4, 10, 6][:n_prompts]
+    L = max(lens)
+    ids = torch.zeros((n_prompts, L), dtype=torch.long)
+    attn = torch.zeros((n_prompts, L), dtype=torch.long)
+    for j, n in enumerate(lens):  # left padding, as generate() builds it
+        ids[j, L - n:] = torch.randint(8, 64, (n,))
+        attn[j, L - n:] = 1
+    return torch, model, ids, attn
+
+
+def _bodies(rows, stop):
+    out = []
+    for g in rows:
+        i = next((i for i, t in enumerate(g) if t in stop), None)
+        out.append(g[: i + 1] if i is not None else g)
+    return out
+
+
+@_param("drop", [True, False])
+def test_decode_loop_greedy_ids_equal_hf_generate(drop):
+    # the loop that drops finished rows must give the ids HF generate gives (same dtype, greedy): this separates a loop
+    # bug (positions, mask, cache row selection) from a dtype or sampling effect
+    k, max_new, stop = 2, 40, (5, 7, 11)
+    torch, model, ids, attn = _tiny_model_and_batch(8, k)
+    with torch.no_grad():
+        ref = model.generate(input_ids=ids.repeat_interleave(k, 0), attention_mask=attn.repeat_interleave(k, 0),
+                             do_sample=False, max_new_tokens=max_new, eos_token_id=list(stop),
+                             pad_token_id=0)[:, ids.shape[1]:].tolist()
+        new, row_steps = rs.decode_loop(model, ids, attn, k, max_new, 1.0, stop, 0, greedy=True, drop_finished=drop,
+                                        compact_every=3)
+    ref_b, new_b = _bodies(ref, stop), _bodies(new, stop)
+    assert new_b == ref_b
+    assert any(len(b) < max_new for b in ref_b)  # some rows really finish early, so dropping is exercised
+    if drop:  # rows really were dropped: fewer decoded row-steps than rows x steps
+        assert row_steps < len(ref_b) * max(len(b) for b in ref_b)
+
+
+def test_decode_loop_sampling_is_finite_and_stops_rows():
+    torch, model, ids, attn = _tiny_model_and_batch(4, 3)
+    torch.manual_seed(1)
+    with torch.no_grad():
+        rows, _ = rs.decode_loop(model, ids, attn, 3, 30, 1.0, (5, 7, 11), 0, compact_every=4)
+    assert len(rows) == 12 and all(len(r) == 30 for r in rows)
+    for b in _bodies(rows, (5, 7, 11)):
+        assert all(0 <= t < 64 for t in b)
+        assert not any(t in (5, 7, 11) for t in b[:-1])  # nothing after the first stop token is kept
+
+
+def test_gqa_decode_attention_matches_stock_sdpa_logits_and_greedy_ids():
+    torch = pytest.importorskip("torch")
+    transformers = pytest.importorskip("transformers")
+    name = rs.register_gqa_decode_attention()
+    k, max_new, stop = 2, 30, (5, 7, 11)
+    _, ref_model, ids, attn = _tiny_model_and_batch(8, k)
+    cfg = ref_model.config
+    new_model = transformers.LlamaForCausalLM._from_config(cfg, attn_implementation=name).eval()
+    new_model.load_state_dict(ref_model.state_dict())
+    with torch.no_grad():
+        a = ref_model(input_ids=ids, attention_mask=attn).logits
+        b = new_model(input_ids=ids, attention_mask=attn).logits
+        assert torch.allclose(a, b, atol=1e-5)  # prefill goes through the stock path
+        ref, _ = rs.decode_loop(ref_model, ids, attn, k, max_new, 1.0, stop, 0, greedy=True, compact_every=3)
+        new, _ = rs.decode_loop(new_model, ids, attn, k, max_new, 1.0, stop, 0, greedy=True, compact_every=3)
+        # one decode step, same cache contents: logits agree to float32 reduction-order error
+        c1 = transformers.DynamicCache(config=cfg)
+        c2 = transformers.DynamicCache(config=cfg)
+        pos = (attn.cumsum(-1) - 1).clamp_min(0)
+        ref_model(input_ids=ids, attention_mask=attn, position_ids=pos, past_key_values=c1, use_cache=True)
+        new_model(input_ids=ids, attention_mask=attn, position_ids=pos, past_key_values=c2, use_cache=True)
+        nxt = torch.randint(8, 64, (ids.shape[0], 1))
+        m2 = torch.cat([attn, torch.ones_like(attn[:, :1])], 1)
+        l1 = ref_model(input_ids=nxt, attention_mask=m2, position_ids=pos[:, -1:] + 1, past_key_values=c1, use_cache=True).logits
+        l2 = new_model(input_ids=nxt, attention_mask=m2, position_ids=pos[:, -1:] + 1, past_key_values=c2, use_cache=True).logits
+        assert torch.allclose(l1, l2, atol=1e-5), float((l1 - l2).abs().max())
+    assert _bodies(new, stop) == _bodies(ref, stop)
+
+
+@_param("drop", [True, False])
+def test_decode_loop_sampled_ids_equal_hf_generate_for_the_same_seed(drop):
+    # not only greedy: with the random draw taken over all rows, dropping finished rows leaves the sampled ids unchanged
+    k, max_new, stop = 2, 40, (5, 7, 11)
+    torch, model, ids, attn = _tiny_model_and_batch(8, k)
+    with torch.no_grad():
+        torch.manual_seed(123)
+        ref = model.generate(input_ids=ids, attention_mask=attn, do_sample=True, temperature=1.0, top_k=0, top_p=1.0,
+                             max_new_tokens=max_new, num_return_sequences=k, eos_token_id=list(stop),
+                             pad_token_id=0)[:, ids.shape[1]:].tolist()
+        torch.manual_seed(123)
+        new, row_steps = rs.decode_loop(model, ids, attn, k, max_new, 1.0, stop, 0, drop_finished=drop, compact_every=3)
+    assert _bodies(new, stop) == _bodies(ref, stop)
+    assert any(len(b) < max_new for b in _bodies(ref, stop))
+    if drop:
+        assert row_steps < 16 * max(len(b) for b in _bodies(ref, stop))

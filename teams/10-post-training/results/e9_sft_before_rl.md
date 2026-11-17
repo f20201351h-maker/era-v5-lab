@@ -76,6 +76,53 @@ is a capability threshold: not reached at 135M or 360M; 1.7B is the next point (
   `tokenizer.json`; an RL run through `AutoTokenizer` sees different prompt tokens than SFT did. The E10 route loads
   `tokenizer.json` and checks prompt-token identity.
 
+## Generation speed (17 Nov 2026, Kaggle T4, 360M A2 checkpoint)
+
+The 360M screen took 15,690 s to generate and 52 s to score (106.8 tokens/s). Measured on a free Kaggle T4 with the same
+32 rung-1 prompts x 8 samples, seed 1, 2,048 new tokens, temperature 1, fp32 (one T4 per arm, two arms per kernel;
+preregistered in `work/recipe-e9-2026-11-16/PREREG_SPEED.md` with a dated amendment; 5 of 5 allowed kernel runs used):
+
+| arm | change | tokens/s | wall s (generation) | peak GPU GB | text vs baseline |
+|---|---|---|---|---|---|
+| baseline | HF `generate`, stock SDPA, KV 6 GB (28.4 rows per batch) | 107.4 | 4,006 | 7.75 | - |
+| fp16 | baseline in fp16 | crashed | - | - | device assert (non-finite probabilities); not accepted |
+| drop finished rows | own decode loop, stock SDPA | 146.3 (1.36x) | 2,840 | 5.55 | different random stream |
+| grouped decode attention | HF `generate`, `gqa_decode` | 340.9 (3.17x) | 1,263 | 7.34 | 256 of 256 rows identical |
+| **both, exact random draw** | own loop (rows dropped) + `gqa_decode`, same batches | **415.6 (3.87x)** | **1,036** | 5.43 | **256 of 256 rows identical** |
+| both, KV 10 GB, 64 seqs per batch | different batches, so a different random stream | 448.6 (4.18x) | 917 | 7.40 | not comparable (1 of 256) |
+
+Why: a decode step costs about 7 ms per row at a 1,500-token context whatever the dtype (micro-profile: 68 / 169 / 332 ms for
+8 / 24 / 48 rows in fp32 and fp16 alike; tokens/s flat at about 143). The stock SDPA path for a grouped-query model (15 query
+heads, 5 KV heads) repeats K and V three times and scales a full copy of K before the matmul. `rl_screen.register_gqa_decode_attention`
+batches the 3 query heads of each KV head into one matmul so K and V are read once (micro-profile fp32: 36 / 61 / 113 ms for
+8 / 24 / 48 rows, about 400 tokens/s). Dropping finished rows (useful-token share 0.82) adds the rest. fp16 gave no speed in the
+profile and crashed on this checkpoint, so sampling stays fp32 on a T4.
+
+Correctness: the sampled outputs of the baseline and of the fast arm (own loop, rows dropped, `gqa_decode`, same batches and
+seed) are identical in all 256 rows (the loop draws its random numbers over all rows exactly as `generate` does); greedy and
+sampled ids are also equal on a tiny model (tests) and on the real 135M and 360M checkpoints (CPU fp32). Scores therefore
+equal the baseline's by construction: the 32-prompt rung-1 ladder (closed 0.566, runs 0.238, pass 0.4%, truncated 0.418) is
+the same in both. With a larger KV budget the batches change, so the random draws change: that arm and two earlier arms that
+did not yet use the exact draw read 5 to 10 points higher on closed / code-block shares (closed 0.64 to 0.67 against 0.566); with one
+seed and 32 prompts the paired interval over prompts only just excludes zero, and four different streams agree with each other, so
+the baseline's own draw is probably the low one; nothing here separates a sampling-noise gap from a batch-size effect.
+
+New 360M screen time (estimate; rate from the 32-prompt sample, 128 prompts x 8 at the measured mean length 1,636 tokens):
+1,675,500 tokens / 415.6 = 4,032 s (67 min) against 15,690 s (261 min), 3.9x; 3,735 s (62 min) with the 10 GB budget.
+
+SmolLM2-1.7B base, fp16, own loop, one T4, 8 prompts x 8 samples, KV 8 GB (16 rows per batch): 81,352 tokens in 476 s = 170.9 tokens/s,
+peak 7.9 GB, no non-finite values. The base model never closes a turn, so this is a speed sample, not a quality sample, and its
+length mix (mean 1,271 tokens) differs from the SFT arms. The 1.7B model has 32 KV heads for 32 query heads (not grouped), so
+`gqa_decode` brings nothing there (profile: 4 / 8 / 12 rows = 39 / 53 / 69 ms stock, 37 / 54 / 71 ms grouped); the 1.7B job keeps
+stock attention and the own loop. T4 numbers do not transfer to an A100; the A100 time in the request is a scaled estimate.
+
+Run order and a time limit: `cfg_e9_17b.yaml` runs A4 first (about 16 min on an A100: train, screen, forgetting), then A2v2.
+`recipe_job.py` rewrites `e9_summary.json` after every finished arm (`complete: false` until all arms are done). After a
+timeout the report holds: the finished arms (A4) with `train_report.json`, `screen/screen_report.json`, `forget.json` and their
+`brief` in `e9_summary.json`; for the arm in progress, the training log and resumable state (saved every 10 updates) or,
+if it was already screening, `screen/generations.jsonl` with the batches written so far (generation resumes per batch;
+scoring and the report exist only once the screen finishes); the arms not reached have no folder.
+
 ## What does not transfer
 
 Tokenizer, architecture (KE2 MoE with an untied head), pre-training data and token count, optimizer (Muon), and the SFT
